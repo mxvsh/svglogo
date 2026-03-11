@@ -34,9 +34,22 @@ export async function buildCanvasSvg(
 		borderColor,
 	} = state;
 
-	const iconPx = Math.round((iconSize / 100) * size);
+	const safeIconSize = Number.isFinite(iconSize)
+		? Math.min(90, Math.max(10, iconSize))
+		: 60;
+	const safeIconBorderWidth = Number.isFinite(iconBorderWidth)
+		? Math.min(24, Math.max(0, iconBorderWidth))
+		: 0;
+	const safeBorderWidth = Number.isFinite(borderWidth)
+		? Math.min(24, Math.max(0, borderWidth))
+		: 0;
+	const safeBorderRadius = Number.isFinite(borderRadius)
+		? Math.min(size / 2, Math.max(0, borderRadius))
+		: 0;
+
+	const iconPx = Math.round((safeIconSize / 100) * size);
 	const iconOffset = Math.round((size - iconPx) / 2);
-	const iconOutlineOffsets = getIconOutlineOffsets(iconBorderWidth);
+	const iconOutlineOffsets = getIconOutlineOffsets(safeIconBorderWidth);
 
 	const [iconSvgContent, borderSvgContent] = await Promise.all([
 		fetchIconSvg(iconName, iconColor, iconPx),
@@ -67,8 +80,8 @@ export async function buildCanvasSvg(
 	}
 
 	const borderAttr =
-		borderWidth > 0
-			? `stroke="${borderColor}" stroke-width="${borderWidth * 2}"`
+		safeBorderWidth > 0
+			? `stroke="${borderColor}" stroke-width="${safeBorderWidth * 2}"`
 			: "";
 
 	// Clip the icon SVG within the canvas
@@ -89,10 +102,10 @@ export async function buildCanvasSvg(
   ${bgDef}
   <defs>
     <clipPath id="canvas-clip">
-      <rect width="${size}" height="${size}" rx="${borderRadius}" ry="${borderRadius}"/>
+      <rect width="${size}" height="${size}" rx="${safeBorderRadius}" ry="${safeBorderRadius}"/>
     </clipPath>
   </defs>
-  <rect width="${size}" height="${size}" rx="${borderRadius}" ry="${borderRadius}" fill="${bgFill}" ${borderAttr} clip-path="url(#canvas-clip)"/>
+  <rect width="${size}" height="${size}" rx="${safeBorderRadius}" ry="${safeBorderRadius}" fill="${bgFill}" ${borderAttr} clip-path="url(#canvas-clip)"/>
   <g clip-path="url(#canvas-clip)">
     ${clippedBorderIcon}
     ${clippedIcon}

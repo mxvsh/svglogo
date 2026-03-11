@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { buildBackgroundCss } from "#/lib/canvasUtils";
-import { getIconOutlineOffsets } from "#/lib/iconOutline";
+import { getPreviewOutlineFilter } from "#/lib/iconOutline";
 import { useLogoStore } from "#/store/logoStore";
 
 export function LogoCanvas() {
@@ -17,8 +17,17 @@ export function LogoCanvas() {
 	} = useLogoStore((s) => s.present);
 
 	const bgStyle = buildBackgroundCss(background);
-	const iconPx = Math.round((iconSize / 100) * 512);
-	const iconOutlineOffsets = getIconOutlineOffsets(iconBorderWidth);
+	const safeIconSize = Number.isFinite(iconSize)
+		? Math.min(90, Math.max(10, iconSize))
+		: 60;
+	const safeIconBorderWidth = Number.isFinite(iconBorderWidth)
+		? Math.min(24, Math.max(0, iconBorderWidth))
+		: 0;
+	const iconPx = Math.round((safeIconSize / 100) * 512);
+	const iconOutlineFilter = getPreviewOutlineFilter(
+		safeIconBorderWidth,
+		iconBorderColor,
+	);
 
 	return (
 		<div
@@ -37,38 +46,18 @@ export function LogoCanvas() {
 			}}
 		>
 			<div className="relative flex h-full w-full items-center justify-center">
-				<div className="relative" style={{ width: iconPx, height: iconPx }}>
-					{iconBorderWidth > 0
-						? iconOutlineOffsets.map((offset) => (
-								<Icon
-									key={`${offset.x}-${offset.y}`}
-									icon={iconName}
-									width={iconPx}
-									height={iconPx}
-									color={iconBorderColor}
-									style={{
-										position: "absolute",
-										inset: 0,
-										transform: `translate(${offset.x}px, ${offset.y}px)`,
-										display: "block",
-										flexShrink: 0,
-									}}
-								/>
-							))
-						: null}
-					<Icon
-						icon={iconName}
-						width={iconPx}
-						height={iconPx}
-						color={iconColor}
-						style={{
-							position: "absolute",
-							inset: 0,
-							display: "block",
-							flexShrink: 0,
-						}}
-					/>
-				</div>
+				<Icon
+					icon={iconName}
+					width={iconPx}
+					height={iconPx}
+					color={iconColor}
+					style={{
+						display: "block",
+						flexShrink: 0,
+						filter: iconOutlineFilter,
+						WebkitFilter: iconOutlineFilter,
+					}}
+				/>
 			</div>
 		</div>
 	);
