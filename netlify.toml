@@ -1,9 +1,9 @@
 [build]
-  publish = ".output/public"
+  publish = "dist/client"
   command = "npm run build"
 
 [functions]
-  directory = ".output/server"
+  directory = "dist/server"
 
 [[redirects]]
   from = "/api/*"
