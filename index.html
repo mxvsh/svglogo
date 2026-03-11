@@ -19,6 +19,15 @@
       content="viewport-fit=cover, width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
       name="viewport"
     />
+    <script type="module">
+      if (import.meta.env.PROD) {
+        const script = document.createElement("script");
+        script.defer = true;
+        script.src = "https://analytics.monawwar.io/script.js";
+        script.setAttribute("data-website-id", "f883cc7f-5dc4-4045-b1ad-c279fcce963c");
+        document.head.appendChild(script);
+      }
+    </script>
     <link href="/favicon.ico" rel="icon" />
   </head>
   <body>
