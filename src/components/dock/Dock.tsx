@@ -149,6 +149,7 @@ export function Dock() {
 					<Tooltip>
 						<Tooltip.Trigger>
               <InlineColorPicker
+                
                 size='xs'
 								value={iconColor}
 								onChange={(c) =>
@@ -161,7 +162,8 @@ export function Dock() {
 						<Tooltip.Content>
 							<p className="text-xs">Icon Color</p>
 						</Tooltip.Content>
-					</Tooltip>
+          </Tooltip>
+
 					<DockPopover
 						label="Icon Border"
 						icon={<Icon icon="lucide:circle" width={16} height={16} />}

@@ -1,4 +1,4 @@
-import { Button, Dropdown, Label } from "@heroui/react";
+import { Dropdown, Label } from "@heroui/react";
 // import ArrowDownToSquare from '@gravity-ui/icons/ArrowDownToSquare'
 import { useExport } from "#/hooks/useExport";
 
@@ -13,9 +13,9 @@ export function ExportMenu() {
 
 	return (
 		<Dropdown>
-	 <Button aria-label="Export" variant="ghost">
-		Export
-      </Button>
+			<Dropdown.Trigger aria-label="Export" variant="ghost">
+				Export
+			</Dropdown.Trigger>
 			<Dropdown.Popover placement="top end">
 				<Dropdown.Menu onAction={handleAction}>
 					<Dropdown.Item id="svg">
