@@ -29,7 +29,7 @@ export function SliderControl({
 				step={step}
 			>
 				<div className="flex justify-between">
-					<Label className="text-xs text-muted">{label}</Label>
+					<Label className="text-sm text-muted">{label}</Label>
 					<Slider.Output className="text-xs text-muted">
 						{() => `${value}${unit}`}
 					</Slider.Output>

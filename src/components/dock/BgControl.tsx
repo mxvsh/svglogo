@@ -76,7 +76,7 @@ export function BgControl() {
 	return (
 		<div className="flex w-52 flex-col gap-4">
 			<div className="flex items-center justify-between">
-				<Label className="text-xs text-muted">Gradient</Label>
+				<Label className="text-sm text-muted">Gradient</Label>
 				<Switch isSelected={isGradient} onChange={toggleGradient}>
 					<Switch.Control>
 						<Switch.Thumb />
@@ -86,7 +86,7 @@ export function BgControl() {
 
 			{!isGradient && background.type === "solid" && (
 				<div className="flex items-center justify-between gap-3">
-					<Label className="text-xs text-muted">Color</Label>
+					<Label className="text-sm text-muted">Color</Label>
 					<ColorSwatchPopover
 						value={background.color}
 						onChange={(c) =>
@@ -141,7 +141,7 @@ function GradientTab({
 				aria-label="Gradient angle"
 			>
 				<div className="flex justify-between">
-					<Label className="text-xs text-muted">Angle</Label>
+					<Label className="text-sm text-muted">Angle</Label>
 					<Slider.Output className="text-xs text-muted">
 						{() => `${direction}°`}
 					</Slider.Output>

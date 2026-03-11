@@ -6,7 +6,19 @@ export function BorderControl() {
 	const { borderWidth, borderColor, borderRadius, set } = useLogo();
 
 	return (
-		<div className="flex w-52 flex-col gap-4">
+    <div className="flex w-52 flex-col gap-3">
+     	<div className="flex items-center justify-between gap-3">
+					<Label className="text-sm text-muted">Select color</Label>
+					<InlineColorPicker
+						value={borderColor}
+						onChange={(c) =>
+							set((d) => {
+								d.borderColor = c;
+							})
+						}
+					/>
+      </div>
+      
 			<Slider
 				value={borderWidth}
 				onChange={(v) =>
@@ -19,7 +31,7 @@ export function BorderControl() {
 				step={1}
 			>
 				<div className="flex justify-between">
-					<Label className="text-xs text-muted">Border Width</Label>
+					<Label className="text-sm text-muted">Border Width</Label>
 					<Slider.Output className="text-xs text-muted">
 						{() => `${borderWidth}px`}
 					</Slider.Output>
@@ -28,22 +40,8 @@ export function BorderControl() {
 					<Slider.Fill />
 					<Slider.Thumb />
 				</Slider.Track>
-			</Slider>
-
-			{borderWidth > 0 && (
-				<div className="flex items-center justify-between gap-3">
-					<Label className="text-xs text-muted">Color</Label>
-					<InlineColorPicker
-						value={borderColor}
-						onChange={(c) =>
-							set((d) => {
-								d.borderColor = c;
-							})
-						}
-					/>
-				</div>
-			)}
-
+      </Slider>
+			
 			<Slider
 				value={borderRadius}
 				onChange={(v) =>
@@ -56,7 +54,7 @@ export function BorderControl() {
 				step={1}
 			>
 				<div className="flex justify-between">
-					<Label className="text-xs text-muted">Radius</Label>
+					<Label className="text-sm text-muted">Radius</Label>
 					<Slider.Output className="text-xs text-muted">
 						{() => `${borderRadius}px`}
 					</Slider.Output>

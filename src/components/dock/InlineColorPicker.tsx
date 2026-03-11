@@ -9,13 +9,15 @@ import type { Color } from "react-aria-components";
 interface InlineColorPickerProps {
 	value: string;
 	onChange: (hex: string) => void;
-	placement?: "top" | "bottom" | "left" | "right";
+  placement?: "top" | "bottom" | "left" | "right";
+	size?: 'xs' | "sm" | "md" | "lg";
 }
 
 export function InlineColorPicker({
 	value,
 	onChange,
-	placement = "top",
+  placement = "top",
+  size = "sm"
 }: InlineColorPickerProps) {
 	return (
 		<ColorPicker
@@ -23,7 +25,7 @@ export function InlineColorPicker({
 			onChange={(c: Color) => onChange(c.toString("hex"))}
 		>
 			<ColorPicker.Trigger className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-default">
-				<ColorSwatch size="xs" shape="circle" />
+				<ColorSwatch size={size} shape="circle" />
 			</ColorPicker.Trigger>
 			<ColorPicker.Popover placement={placement} className="p-3">
 				<ColorArea
