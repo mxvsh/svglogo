@@ -3,7 +3,6 @@ import { Icon } from "@iconify/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
-import { Credits } from "#/components/canvas/Credits";
 import { GridBackground } from "#/components/canvas/GridBackground";
 import { LogoCanvas } from "#/components/canvas/LogoCanvas";
 import { Dock } from "#/components/dock/Dock";
@@ -98,7 +97,6 @@ function Editor() {
 	return (
 		<div className="relative flex h-screen w-screen items-center justify-center overflow-hidden">
 			<GridBackground />
-			<Credits />
 			<motion.div
 				initial={{ opacity: 0, scale: 0.92, y: 16 }}
 				animate={{ opacity: 1, scale: 1, y: 0 }}
