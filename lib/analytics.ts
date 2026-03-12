@@ -7,7 +7,7 @@ export interface ExportPayload {
 }
 
 export function trackDownload(payload: ExportPayload) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined" || typeof umami === "undefined") return;
 
   if (typeof umami?.track === "function") {
     umami.track("download logo", {
