@@ -19,7 +19,7 @@ export function InlineColorPicker({
   onChange,
   placement = "top",
   size = "sm",
-  staticColor,
+  // staticColor,
 }: InlineColorPickerProps) {
   return (
     <ColorPicker
@@ -27,11 +27,7 @@ export function InlineColorPicker({
       onChange={(c: Color) => onChange(c.toString("hex"))}
     >
       <ColorPicker.Trigger className="flex h-8 w-8 items-center justify-center rounded-lg transition hover:bg-default">
-        <ColorSwatch
-          size={size}
-          shape="circle"
-          color={staticColor ? value : "#f9f9f9"}
-        />
+        <ColorSwatch size={size} shape="circle" color={value} />
       </ColorPicker.Trigger>
       <ColorPicker.Popover placement={placement} className="p-3">
         <ColorArea
