@@ -1,4 +1,4 @@
-import { Dropdown, Label } from "@heroui/react";
+import { Button, Dropdown, Label } from "@heroui/react";
 import { useExport } from "#/hooks/useExport";
 
 export function ExportMenu() {
@@ -12,7 +12,9 @@ export function ExportMenu() {
 
   return (
     <Dropdown>
-      <Dropdown.Trigger aria-label="Export">Export</Dropdown.Trigger>
+      <Button size="sm" variant="ghost" aria-label="Export">
+        Export
+      </Button>
       <Dropdown.Popover placement="top end">
         <Dropdown.Menu onAction={handleAction}>
           <Dropdown.Item id="svg">
