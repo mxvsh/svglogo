@@ -12,7 +12,12 @@ export function ExportMenu() {
 
   return (
     <Dropdown>
-      <Button size="sm" variant="ghost" aria-label="Export">
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label="Export"
+        data-tour="export-button"
+      >
         Export
       </Button>
       <Dropdown.Popover placement="top end">

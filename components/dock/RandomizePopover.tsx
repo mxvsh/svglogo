@@ -55,6 +55,7 @@ export function RandomizePopover() {
                 isIconOnly
                 variant="ghost"
                 aria-label="Open randomize options"
+                data-tour="randomize-button"
               >
                 <motion.span
                   animate={{ rotate: diceRotation }}

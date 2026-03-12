@@ -107,6 +107,7 @@ export function Dock() {
                 variant="ghost"
                 onPress={openIconPicker}
                 aria-label="Change icon"
+                data-tour="icon-button"
               >
                 <FaceSmile width={20} height={20} />
               </Button>
@@ -169,6 +170,7 @@ export function Dock() {
 
           <DockPopover
             label="Background"
+            tourId="background-button"
             icon={<BucketPaint width={16} height={16} />}
           >
             <BgControl />
@@ -176,6 +178,7 @@ export function Dock() {
 
           <DockPopover
             label="Border & Radius"
+            tourId="border-radius-button"
             icon={<Frame width={16} height={16} />}
           >
             <BorderControl />
@@ -214,10 +217,12 @@ function Divider() {
 
 function DockPopover({
   label,
+  tourId,
   icon,
   children,
 }: {
   label: string;
+  tourId?: string;
   icon: React.ReactNode;
   children: React.ReactNode;
 }) {
@@ -226,7 +231,13 @@ function DockPopover({
       <Tooltip>
         <Tooltip.Trigger tabIndex={-1}>
           <Popover.Trigger tabIndex={-1}>
-            <Button isIconOnly variant="ghost" size="sm" aria-label={label}>
+            <Button
+              isIconOnly
+              variant="ghost"
+              size="sm"
+              aria-label={label}
+              data-tour={tourId}
+            >
               {icon}
             </Button>
           </Popover.Trigger>

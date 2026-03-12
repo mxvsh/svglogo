@@ -23,6 +23,7 @@ export function LogoCanvas() {
   return (
     <div
       className="relative shrink-0 shadow-2xl shadow-black/50"
+      data-tour="canvas"
       style={{
         width: 512,
         height: 512,
