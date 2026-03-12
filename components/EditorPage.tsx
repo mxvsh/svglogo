@@ -127,7 +127,7 @@ function EditorPage() {
           href={DISCORD_URL}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full border border-(--border) bg-(--surface)/90 px-3 py-1.5 text-xs text-(--foreground) shadow-lg backdrop-blur-xl transition hover:bg-(--surface-secondary)"
+          className="inline-flex items-center gap-2 rounded-full border border-border bg-surface)/90 px-3 py-1.5 text-xs text-foreground) shadow-lg backdrop-blur-xl transition hover:bg-surface-secondary)"
         >
           <Icon icon="simple-icons:discord" width={12} height={12} />
           Join Discord

@@ -84,15 +84,15 @@ export function IconGrid({
                   title={iconName}
                   className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl transition-all ${
                     selected === iconName
-                      ? "bg-(--accent)/20 ring-2 ring-(--accent)"
-                      : "hover:bg-(--surface-secondary)"
+                      ? "bg-accent)/20 ring-2 ring-accent"
+                      : "hover:bg-surface-secondary)"
                   }`}
                 >
                   <Icon
                     icon={iconName}
                     width={24}
                     height={24}
-                    className="text-(--foreground)"
+                    className="text-foreground"
                   />
                 </button>
               ))}

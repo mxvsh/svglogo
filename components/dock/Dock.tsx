@@ -58,7 +58,7 @@ export function Dock() {
           initial={{ opacity: 0, y: 72 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-          className="flex items-center gap-2 rounded-2xl border border-border bg-(--surface)/90 px-3 py-2 shadow-xl backdrop-blur-xl"
+          className="flex items-center gap-2 rounded-2xl border border-border bg-surface/90 px-3 py-2 shadow-xl backdrop-blur-xl"
         >
           {/* Undo / Redo */}
           <Tooltip>

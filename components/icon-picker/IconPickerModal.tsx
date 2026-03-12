@@ -120,7 +120,7 @@ export function IconPickerModal() {
                 </p>
               </div>
 
-              <div className="h-[380px]">
+              <div className="h-95">
                 <IconGrid
                   icons={icons}
                   isLoading={isFetching && icons.length === 0}
