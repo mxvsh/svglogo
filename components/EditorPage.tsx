@@ -1,7 +1,6 @@
 "use client";
 
 import { toast } from "@heroui/react";
-import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useCallback } from "react";
 import { GridBackground } from "#/components/canvas/GridBackground";
@@ -10,9 +9,6 @@ import { Dock } from "#/components/dock/Dock";
 import { IconPickerModal } from "#/components/icon-picker/IconPickerModal";
 import { useKbShortcut } from "#/hooks/useKbShortcut";
 import { useLogoStore } from "#/store/logoStore";
-
-const FEEDBACK_URL = "https://x.com/monawwarx";
-const DISCORD_URL = "https://discord.gg/qjxWBqtYZu";
 
 function EditorPage() {
   const openIconPicker = useLogoStore((s) => s.openIconPicker);
@@ -105,34 +101,6 @@ function EditorPage() {
       </motion.div>
       <Dock />
       <IconPickerModal />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.96 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{
-          opacity: { duration: 0.35, delay: 0.25, ease: [0.22, 1, 0.36, 1] },
-          scale: { duration: 0.35, delay: 0.25, ease: [0.22, 1, 0.36, 1] },
-        }}
-        className="pointer-events-auto absolute bottom-4 left-4 z-20 flex flex-col items-start gap-2"
-      >
-        <a
-          href={FEEDBACK_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/90 px-3 py-1.5 text-xs text-foreground shadow-lg backdrop-blur-xl transition hover:bg-surface-secondary"
-        >
-          <Icon icon="simple-icons:x" width={12} height={12} />
-          Feedback
-        </a>
-        <a
-          href={DISCORD_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-full border border-border bg-surface)/90 px-3 py-1.5 text-xs text-foreground) shadow-lg backdrop-blur-xl transition hover:bg-surface-secondary)"
-        >
-          <Icon icon="simple-icons:discord" width={12} height={12} />
-          Join Discord
-        </a>
-      </motion.div>
     </div>
   );
 }

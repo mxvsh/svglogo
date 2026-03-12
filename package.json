@@ -19,7 +19,6 @@
     "@tanstack/react-virtual": "^3.13.21",
     "framer-motion": "^12.35.2",
     "immer": "^11.1.4",
-    "motion": "^12.35.2",
     "next": "16.1.6",
     "next-sitemap": "^4.2.3",
     "react": "19.2.3",
