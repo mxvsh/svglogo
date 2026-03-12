@@ -52,10 +52,6 @@ export const metadata: Metadata = {
       "Create logos in seconds with icon, color, and background controls. Export high-quality SVG, PNG, and ICO from your browser.",
     images: ["https://svglogo.dev/og/banner.png"],
   },
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f7f7f8" },
-    { media: "(prefers-color-scheme: dark)", color: "#111214" },
-  ],
 };
 
 export default function RootLayout({
