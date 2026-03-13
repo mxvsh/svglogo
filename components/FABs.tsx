@@ -18,6 +18,7 @@ function FABs() {
     { action: "Redo", shortcut: "⌘ + ⇧ + Z" },
     { action: "Randomize", shortcut: "R" },
     { action: "Open Icon Picker", shortcut: "I" },
+    { action: "Like / Add to Collection", shortcut: "L" },
     { action: "Copy SVG JSON", shortcut: "⇧ + C" },
     { action: "Paste SVG JSON", shortcut: "⇧ + V" },
   ];

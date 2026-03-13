@@ -141,6 +141,32 @@ function sanitizeLogoState(value: unknown): LogoState {
   };
 }
 
+export function areLogosEqual(a: LogoState, b: LogoState) {
+  if (a.iconName !== b.iconName) return false;
+  if (a.iconColor !== b.iconColor) return false;
+  if (a.iconBorderColor !== b.iconBorderColor) return false;
+  if (a.iconBorderWidth !== b.iconBorderWidth) return false;
+  if (a.iconSize !== b.iconSize) return false;
+  if (a.borderRadius !== b.borderRadius) return false;
+  if (a.borderWidth !== b.borderWidth) return false;
+  if (a.borderColor !== b.borderColor) return false;
+
+  if (a.background.type !== b.background.type) return false;
+  if (a.background.type === "solid" && b.background.type === "solid") {
+    return a.background.color === b.background.color;
+  }
+  if (a.background.type === "gradient" && b.background.type === "gradient") {
+    return (
+      a.background.direction === b.background.direction &&
+      a.background.stops[0].color === b.background.stops[0].color &&
+      a.background.stops[0].position === b.background.stops[0].position &&
+      a.background.stops[1].color === b.background.stops[1].color &&
+      a.background.stops[1].position === b.background.stops[1].position
+    );
+  }
+  return false;
+}
+
 export const useLogoStore = create<StoreState>()(
   persist(
     (get_set, get) => ({

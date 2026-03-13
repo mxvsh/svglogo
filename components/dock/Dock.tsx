@@ -7,6 +7,7 @@ import Frame from "@gravity-ui/icons/Frame";
 import { Button, Label, Popover, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
+import { HistoryButton } from "#/components/dock/HistoryButton";
 import { useLogo } from "#/hooks/useLogo";
 import { useLogoStore } from "#/store/logoStore";
 import { BgControl } from "./BgControl";
@@ -35,6 +36,10 @@ export function Dock() {
       <div className="relative">
         <div className="absolute right-full top-1/2 mr-2 -translate-y-1/2">
           <RandomizePopover />
+        </div>
+
+        <div className="absolute left-full top-1/2 ml-2 -translate-y-1/2">
+          <HistoryButton />
         </div>
 
         <motion.div

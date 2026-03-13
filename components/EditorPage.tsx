@@ -2,13 +2,14 @@
 
 import { toast } from "@heroui/react";
 import { motion } from "framer-motion";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { GridBackground } from "#/components/canvas/GridBackground";
 import { LogoCanvas } from "#/components/canvas/LogoCanvas";
 import { Dock } from "#/components/dock/Dock";
 import { IconPickerModal } from "#/components/icon-picker/IconPickerModal";
 import { useKbShortcut } from "#/hooks/useKbShortcut";
-import { useLogoStore } from "#/store/logoStore";
+import { useLogoStore, areLogosEqual } from "#/store/logoStore";
+import { useCollectionStore } from "#/store/collectionStore";
 
 function EditorPage() {
   const openIconPicker = useLogoStore((s) => s.openIconPicker);
@@ -19,7 +20,20 @@ function EditorPage() {
   const present = useLogoStore((s) => s.present);
   const set = useLogoStore((s) => s.set);
 
+  const collections = useCollectionStore((s) => s.collections);
+  const { saveLogo, removeLogo } = useCollectionStore();
+
   useKbShortcut("i", openIconPicker);
+  useKbShortcut("l", () => {
+    const matchedLogo = collections.find((c) => areLogosEqual(c, present));
+    if (matchedLogo) {
+      removeLogo(matchedLogo.id);
+      toast("Removed from collection");
+    } else {
+      saveLogo(present);
+      toast("Added to collection");
+    }
+  });
   useKbShortcut(
     "z",
     () => {

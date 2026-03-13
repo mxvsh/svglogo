@@ -1,0 +1,107 @@
+"use client";
+
+import { BookOpen } from "@gravity-ui/icons";
+import { Button, Description, Label, ListBox, Popover } from "@heroui/react";
+import { Icon } from "@iconify/react";
+import { useCollectionStore } from "#/store/collectionStore";
+import { useLogoStore } from "#/store/logoStore";
+
+export function CollectionsButton() {
+  const collections = useCollectionStore((s) => s.collections);
+  const removeLogo = useCollectionStore((s) => s.removeLogo);
+  const setLogo = useLogoStore((s) => s.set);
+
+  const handleSelect = (id: React.Key) => {
+    const saved = collections.find((l) => l.id === id);
+    if (saved) {
+      setLogo((d) => {
+        d.iconName = saved.iconName;
+        d.iconColor = saved.iconColor;
+        d.iconBorderColor = saved.iconBorderColor;
+        d.iconBorderWidth = saved.iconBorderWidth;
+        d.iconSize = saved.iconSize;
+        d.background = saved.background;
+        d.borderRadius = saved.borderRadius;
+        d.borderWidth = saved.borderWidth;
+        d.borderColor = saved.borderColor;
+      });
+    }
+  };
+
+  return (
+    <div className="pointer-events-auto absolute bottom-6 right-6 z-50">
+      <Popover>
+        <Popover.Trigger>
+          <Button size="lg">
+            <BookOpen />
+            Collections
+          </Button>
+        </Popover.Trigger>
+        <Popover.Content className="p-1">
+          <Popover.Dialog className="p-0">
+            {collections.length === 0 ? (
+              <div className="p-4 text-sm text-muted-foreground text-center w-55">
+                No saved logos yet.
+              </div>
+            ) : (
+              <ListBox
+                aria-label="Collections"
+                className="w-65 max-h-100 overflow-y-auto"
+                selectionMode="single"
+                onAction={handleSelect}
+              >
+                {collections.map((logo) => (
+                  <ListBox.Item
+                    key={logo.id}
+                    id={logo.id}
+                    textValue={logo.iconName}
+                    className="group"
+                  >
+                    <div className="flex items-center gap-3 w-full py-1">
+                      <div
+                        className="w-8 h-8 rounded flex items-center justify-center border border-border/50 shrink-0"
+                        style={{
+                          background:
+                            logo.background.type === "solid"
+                              ? logo.background.color
+                              : `linear-gradient(${logo.background.direction}deg, ${logo.background.stops[0].color}, ${logo.background.stops[1].color})`,
+                        }}
+                      >
+                        <Icon
+                          icon={logo.iconName}
+                          width={18}
+                          height={18}
+                          style={{ color: logo.iconColor }}
+                        />
+                      </div>
+                      <div className="flex flex-col flex-1 min-w-0">
+                        <Label className="truncate text-xs font-medium">
+                          {logo.iconName.split(":")[1] || logo.iconName}
+                        </Label>
+                        <Description className="text-[10px] opacity-70">
+                          {new Date(logo.savedAt).toLocaleDateString()}
+                        </Description>
+                      </div>
+
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        variant="ghost"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity min-w-6 w-6 h-6 p-0 flex items-center justify-center ml-2"
+                        onPress={() => {
+                          removeLogo(logo.id);
+                        }}
+                      >
+                        <Icon icon="lucide:x" width={12} height={12} />
+                      </Button>
+                    </div>
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            )}
+          </Popover.Dialog>
+        </Popover.Content>
+      </Popover>
+    </div>
+  );
+}
