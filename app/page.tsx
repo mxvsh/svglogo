@@ -64,7 +64,7 @@ export default async function Home(props: {
 
   return (
     <>
-      <DesktopOnlyNotice />
+      <DesktopOnlyNotice shareId={shareId} />
       <DesktopAppShell notification={notification} sharedLogo={sharedLogo} />
     </>
   );
