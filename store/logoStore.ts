@@ -63,11 +63,21 @@ const DEFAULT: LogoState = {
   iconName: "lucide:heart",
   iconColor: "#BDBDBD",
   iconBorderColor: "#111111",
-  iconBorderWidth: 0,
+  iconBorderWidth: 18,
   iconSize: 60,
   background: {
-    type: "solid",
-    color: "#E82C4E",
+    type: "gradient",
+    direction: 135,
+    stops: [
+      {
+        color: "#F74562",
+        position: 0,
+      },
+      {
+        color: "#EB4BBB",
+        position: 100,
+      },
+    ],
   },
   borderRadius: 112,
   borderWidth: 0,
