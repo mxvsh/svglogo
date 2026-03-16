@@ -8,7 +8,8 @@ import {
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
-import { useIconSearch } from "#/hooks/useIconSearch";
+import { useQuery } from "@tanstack/react-query";
+import { fetchGlobalSearch, useIconSearch } from "#/hooks/useIconSearch";
 import { trackEvent } from "#/lib/analytics";
 import { useLogoStore } from "#/store/logoStore";
 import { IconGrid } from "./IconGrid";
@@ -32,16 +33,28 @@ export function IconPickerModal() {
 
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [isGlobalSearch, setIsGlobalSearch] = useState(false);
 
   useEffect(() => {
+    setIsGlobalSearch(false);
     const t = setTimeout(() => setDebouncedQuery(query), 300);
     return () => clearTimeout(t);
   }, [query]);
 
-  const { data: icons = [], isFetching } = useIconSearch(
+  const { data: prefixIcons = [], isFetching: isFetchingPrefix } = useIconSearch(
     debouncedQuery,
     prefix,
   );
+
+  const { data: globalIcons = [], isFetching: isFetchingGlobal } = useQuery({
+    queryKey: ["iconify-global-search", debouncedQuery],
+    queryFn: () => fetchGlobalSearch(debouncedQuery),
+    enabled: isGlobalSearch && !!debouncedQuery,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const icons = isGlobalSearch ? globalIcons : prefixIcons;
+  const isFetching = isGlobalSearch ? isFetchingGlobal : isFetchingPrefix;
 
   const handleSelect = (name: string) => {
     trackEvent("select icon", { iconName: name });
@@ -122,7 +135,11 @@ export function IconPickerModal() {
 
               <div className="px-3 py-1">
                 <p className="text-xs text-muted">
-                  {isFetching ? "Loading…" : `${icons.length} icons`}
+                  {isFetching
+                    ? "Loading…"
+                    : isGlobalSearch
+                      ? `${icons.length} icons across all sets`
+                      : `${icons.length} icons`}
                 </p>
               </div>
 
@@ -132,6 +149,9 @@ export function IconPickerModal() {
                   isLoading={isFetching && icons.length === 0}
                   selected={iconName}
                   onSelect={handleSelect}
+                  query={debouncedQuery}
+                  isGlobalSearch={isGlobalSearch}
+                  onGlobalSearch={() => setIsGlobalSearch(true)}
                 />
               </div>
             </Modal.Body>

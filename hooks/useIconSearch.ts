@@ -3,6 +3,14 @@ import { useMemo } from "react";
 
 const ICONIFY_BASE = "https://api.iconify.design";
 
+export async function fetchGlobalSearch(query: string): Promise<string[]> {
+  const res = await fetch(
+    `${ICONIFY_BASE}/search?query=${encodeURIComponent(query)}&limit=128`,
+  );
+  const data = await res.json();
+  return (data.icons ?? []) as string[];
+}
+
 async function fetchAllForPrefix(prefix: string): Promise<string[]> {
   const res = await fetch(`${ICONIFY_BASE}/collection?prefix=${prefix}`);
   const data = await res.json();

@@ -1,4 +1,4 @@
-import { Spinner } from "@heroui/react";
+import { Button, Spinner } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useRef } from "react";
@@ -15,6 +15,9 @@ interface IconGridProps {
   isLoading: boolean;
   selected: string;
   onSelect: (icon: string) => void;
+  query?: string;
+  isGlobalSearch?: boolean;
+  onGlobalSearch?: () => void;
 }
 
 export function IconGrid({
@@ -22,6 +25,9 @@ export function IconGrid({
   isLoading,
   selected,
   onSelect,
+  query,
+  isGlobalSearch,
+  onGlobalSearch,
 }: IconGridProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const COLS = useCols();
@@ -44,8 +50,14 @@ export function IconGrid({
 
   if (icons.length === 0) {
     return (
-      <div className="flex h-full items-center justify-center text-sm text-muted">
-        No icons found
+      <div className="flex h-full flex-col items-center justify-center gap-3">
+        <p className="text-sm text-muted">No icons found</p>
+        {query && !isGlobalSearch && onGlobalSearch && (
+          <Button size="sm" variant="outline" onPress={onGlobalSearch}>
+            <Icon icon="lucide:globe" width={14} />
+            Search all icon sets
+          </Button>
+        )}
       </div>
     );
   }
