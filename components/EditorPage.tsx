@@ -7,6 +7,7 @@ import { GridBackground } from "#/components/canvas/GridBackground";
 import { LogoCanvas } from "#/components/canvas/LogoCanvas";
 import { Dock } from "#/components/dock/Dock";
 import { IconPickerModal } from "#/components/icon-picker/IconPickerModal";
+import { useExport } from "#/hooks/useExport";
 import { useKbShortcut } from "#/hooks/useKbShortcut";
 import { trackEvent } from "#/lib/analytics";
 import { useCollectionStore } from "#/store/collectionStore";
@@ -23,6 +24,7 @@ function EditorPage() {
 
   const collections = useCollectionStore((s) => s.collections);
   const { saveLogo, removeLogo } = useCollectionStore();
+  const { copyPng } = useExport();
 
   useKbShortcut("i", openIconPicker);
   useKbShortcut("l", () => {
@@ -58,32 +60,45 @@ function EditorPage() {
     },
     { mod: "ctrl" },
   );
-  const copyCurrentSettings = useCallback(async () => {
-    const payload = JSON.stringify(present, null, 2);
+  // Cmd+C — copy PNG (skip when text is selected or an input is focused)
+  useKbShortcut(
+    "c",
+    () => {
+      const active = document.activeElement;
+      const inInput =
+        active instanceof HTMLInputElement ||
+        active instanceof HTMLTextAreaElement ||
+        (active as HTMLElement)?.isContentEditable;
+      const hasSelection = (window.getSelection()?.toString().length ?? 0) > 0;
+      if (inInput || hasSelection) return;
+      void copyPng();
+    },
+    { mod: "cmd", preventDefault: false },
+  );
 
+  const copyIconData = useCallback(async () => {
+    const payload = JSON.stringify(present, null, 2);
     try {
       await navigator.clipboard.writeText(payload);
-      toast("Copied current settings");
+      toast("Icon data copied");
     } catch {
       toast("Copy failed");
     }
   }, [present]);
   useKbShortcut(
     "c",
-    () => {
-      void copyCurrentSettings();
-    },
+    () => { void copyIconData(); },
     { mod: "shift" },
   );
-  const applySettingsFromClipboard = useCallback(async () => {
+
+  const pasteIconData = useCallback(async () => {
     try {
       const text = await navigator.clipboard.readText();
       const parsed = JSON.parse(text);
       if (!isLogoStateLike(parsed)) {
-        toast("Clipboard does not contain valid settings");
+        toast("Clipboard does not contain valid icon data");
         return;
       }
-
       set((d) => {
         d.iconName = parsed.iconName;
         d.iconColor = parsed.iconColor;
@@ -93,16 +108,14 @@ function EditorPage() {
         d.borderWidth = parsed.borderWidth;
         d.borderColor = parsed.borderColor;
       });
-      toast("Applied settings from clipboard");
+      toast("Icon data pasted");
     } catch {
       toast("Paste failed");
     }
   }, [set]);
   useKbShortcut(
     "v",
-    () => {
-      void applySettingsFromClipboard();
-    },
+    () => { void pasteIconData(); },
     { mod: "shift" },
   );
 

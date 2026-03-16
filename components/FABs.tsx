@@ -20,8 +20,9 @@ function FABs() {
     { action: "Randomize", shortcut: "R" },
     { action: "Open Icon Picker", shortcut: "I" },
     { action: "Like / Add to Collection", shortcut: "L" },
-    { action: "Copy SVG JSON", shortcut: "⇧ + C" },
-    { action: "Paste SVG JSON", shortcut: "⇧ + V" },
+    { action: "Copy image (PNG)", shortcut: "⌘ + C" },
+    { action: "Copy icon data", shortcut: "⇧ + C" },
+    { action: "Paste icon data", shortcut: "⇧ + V" },
   ];
 
   const open = () => setIsOpen(true);
