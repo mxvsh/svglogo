@@ -20,6 +20,8 @@ export function buildBackgroundCss(bg: Background): React.CSSProperties {
 export type IconSvgCache = {
   iconSvgContent: string;
   borderSvgContent: string;
+  iconSvgUri: string;
+  borderSvgUri: string;
 };
 
 const FETCH_SIZE = 256;
@@ -38,7 +40,12 @@ export async function fetchIconSvgs(state: LogoState): Promise<IconSvgCache> {
       ? fetchIconSvg(iconName, iconBorderColor, FETCH_SIZE)
       : Promise.resolve(""),
   ]);
-  return { iconSvgContent, borderSvgContent };
+  return {
+    iconSvgContent,
+    borderSvgContent,
+    iconSvgUri: iconSvgContent ? encodeURIComponent(iconSvgContent) : "",
+    borderSvgUri: borderSvgContent ? encodeURIComponent(borderSvgContent) : "",
+  };
 }
 
 /** Build SVG string synchronously from cached icon SVGs — no network call */
@@ -56,7 +63,7 @@ export function buildCanvasSvgSync(
     borderWidth,
     borderColor,
   } = state;
-  const { iconSvgContent, borderSvgContent } = cache;
+  const { iconSvgUri, borderSvgUri } = cache;
 
   const safeIconSize = Number.isFinite(iconSize)
     ? Math.min(90, Math.max(10, iconSize))
@@ -101,16 +108,16 @@ export function buildCanvasSvgSync(
       : "";
 
   const clippedBorderIcon =
-    borderSvgContent && iconOutlineOffsets.length > 0
+    borderSvgUri && iconOutlineOffsets.length > 0
       ? iconOutlineOffsets
           .map(
             (offset) =>
-              `<image href="data:image/svg+xml,${encodeURIComponent(borderSvgContent)}" x="${iconOffset + offset.x}" y="${iconOffset + offset.y}" width="${iconPx}" height="${iconPx}"/>`,
+              `<image href="data:image/svg+xml,${borderSvgUri}" x="${iconOffset + offset.x}" y="${iconOffset + offset.y}" width="${iconPx}" height="${iconPx}"/>`,
           )
           .join("")
       : "";
-  const clippedIcon = iconSvgContent
-    ? `<image href="data:image/svg+xml,${encodeURIComponent(iconSvgContent)}" x="${iconOffset}" y="${iconOffset}" width="${iconPx}" height="${iconPx}"/>`
+  const clippedIcon = iconSvgUri
+    ? `<image href="data:image/svg+xml,${iconSvgUri}" x="${iconOffset}" y="${iconOffset}" width="${iconPx}" height="${iconPx}"/>`
     : "";
 
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
