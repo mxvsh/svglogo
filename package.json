@@ -25,6 +25,7 @@
     "next-sitemap": "^4.2.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "timeago.js": "^4.0.2",
     "zustand": "^5.0.11"
   },
   "devDependencies": {

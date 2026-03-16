@@ -26,7 +26,7 @@ export const useCollectionStore = create<CollectionState>()(
               id: crypto.randomUUID(),
               savedAt: Date.now(),
             },
-            ...state.collections.slice(0, 6),
+            ...state.collections.slice(0, 19),
           ],
         })),
       removeLogo: (id) =>

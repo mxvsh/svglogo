@@ -2,6 +2,7 @@
 
 import { BookOpen } from "@gravity-ui/icons";
 import { Button, Description, Label, ListBox, Popover } from "@heroui/react";
+import { format } from "timeago.js";
 import { Icon } from "@iconify/react";
 import { useCollectionStore } from "#/store/collectionStore";
 import { useLogoStore } from "#/store/logoStore";
@@ -46,7 +47,7 @@ export function CollectionsButton() {
             ) : (
               <ListBox
                 aria-label="Collections"
-                className="w-65 max-h-100 overflow-y-auto"
+                className="w-65 max-h-72 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 selectionMode="single"
                 onAction={handleSelect}
               >
@@ -79,7 +80,12 @@ export function CollectionsButton() {
                           {logo.iconName.split(":")[1] || logo.iconName}
                         </Label>
                         <Description className="text-[10px] opacity-70">
-                          {new Date(logo.savedAt).toLocaleDateString()}
+                          <time
+                            dateTime={new Date(logo.savedAt).toISOString()}
+                            title={new Date(logo.savedAt).toLocaleString()}
+                          >
+                            {format(logo.savedAt)}
+                          </time>
                         </Description>
                       </div>
 
