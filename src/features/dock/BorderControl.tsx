@@ -1,0 +1,70 @@
+import { Label, Slider } from "@heroui/react";
+import { useLogoState, useLogoActions } from "#/queries/logo/use-logo-state";
+import { InlineColorPicker } from "./InlineColorPicker";
+
+export function BorderControl() {
+  const { borderWidth, borderColor, borderRadius } = useLogoState();
+  const { set } = useLogoActions();
+
+  return (
+    <div className="flex w-52 flex-col gap-3">
+      <div className="flex items-center justify-between gap-3">
+        <Label className="text-sm text-muted">Select color</Label>
+        <InlineColorPicker
+          value={borderColor}
+          onChange={(c) =>
+            set((d) => {
+              d.borderColor = c;
+            })
+          }
+        />
+      </div>
+
+      <Slider
+        value={borderWidth}
+        onChange={(v) =>
+          set((d) => {
+            d.borderWidth = v as number;
+          })
+        }
+        minValue={0}
+        maxValue={24}
+        step={1}
+      >
+        <div className="flex justify-between">
+          <Label className="text-sm text-muted">Border Width</Label>
+          <Slider.Output className="text-xs text-muted">
+            {() => `${borderWidth}px`}
+          </Slider.Output>
+        </div>
+        <Slider.Track>
+          <Slider.Fill />
+          <Slider.Thumb />
+        </Slider.Track>
+      </Slider>
+
+      <Slider
+        value={borderRadius}
+        onChange={(v) =>
+          set((d) => {
+            d.borderRadius = v as number;
+          })
+        }
+        minValue={0}
+        maxValue={256}
+        step={1}
+      >
+        <div className="flex justify-between">
+          <Label className="text-sm text-muted">Radius</Label>
+          <Slider.Output className="text-xs text-muted">
+            {() => `${borderRadius}px`}
+          </Slider.Output>
+        </div>
+        <Slider.Track>
+          <Slider.Fill />
+          <Slider.Thumb />
+        </Slider.Track>
+      </Slider>
+    </div>
+  );
+}
