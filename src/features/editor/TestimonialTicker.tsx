@@ -10,18 +10,28 @@ const SOURCE_ICON: Record<string, string> = {
 
 const INTERVAL = 5000;
 
+function shuffled<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export function TestimonialTicker() {
+  const [sequence] = useState(() => shuffled(TESTIMONIALS));
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
     const t = setInterval(
-      () => setIndex((i) => (i + 1) % TESTIMONIALS.length),
+      () => setIndex((i) => (i + 1) % sequence.length),
       INTERVAL,
     );
     return () => clearInterval(t);
-  }, []);
+  }, [sequence.length]);
 
-  const item = TESTIMONIALS[index];
+  const item = sequence[index];
 
   return (
     <div className="w-52 overflow-hidden">
