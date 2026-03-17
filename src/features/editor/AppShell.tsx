@@ -70,10 +70,10 @@ export function AppShell({
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="absolute bottom-6 right-6 z-50 flex flex-col gap-2 items-end"
+          className="absolute bottom-4 right-4 z-50 flex flex-col gap-2 items-end"
         >
           <motion.div variants={itemVariants}>
-            <Tooltip delay={300} placement="left">
+            <Tooltip delay={300}>
               <Tooltip.Trigger>
                 <a
                   href="https://webbin.dev?ref=svglogo.dev"

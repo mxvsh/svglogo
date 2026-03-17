@@ -10,6 +10,7 @@ import { InfoModal } from "./InfoModal";
 const FEEDBACK_URL = "https://x.com/monawwarx";
 const DISCORD_URL = "https://discord.gg/qjxWBqtYZu";
 const YOUTUBE_URL = "https://youtube.com/@monawwar";
+const KOFI_URL = "https://ko-fi.com/monawwar";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -136,6 +137,22 @@ export function FABs() {
           </Tooltip.Trigger>
           <Tooltip.Content placement="left">
             <p>About</p>
+          </Tooltip.Content>
+        </Tooltip>
+      </motion.div>
+      
+      <motion.div variants={itemVariants}>
+        <Tooltip delay={0}>
+          <Tooltip.Trigger>
+            <a href={KOFI_URL} target="_blank" rel="noreferrer" data-umami-event="click kofi link">
+              <Button variant="outline" aria-label="Support on Ko-fi">
+                <Icon icon="simple-icons:kofi" width={12} height={12} />
+                Support on Ko-fi
+              </Button>
+            </a>
+          </Tooltip.Trigger>
+          <Tooltip.Content placement="left">
+            <p>Support on Ko-fi</p>
           </Tooltip.Content>
         </Tooltip>
       </motion.div>
