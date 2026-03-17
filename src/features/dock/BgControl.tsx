@@ -34,7 +34,7 @@ export function BgControl() {
   };
 
   return (
-    <div className="flex w-72 flex-col gap-4">
+    <div className={`flex flex-col gap-4 transition-all ${isGradient ? "w-72" : "w-52"}`}>
       <div className="flex items-center justify-between">
         <Label className="text-sm text-muted">Gradient</Label>
         <Switch isSelected={isGradient} onChange={toggleGradient}>
