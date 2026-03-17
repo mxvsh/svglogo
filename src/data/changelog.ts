@@ -7,11 +7,11 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "Mar 17, 2026",
     changes: [
+      "Multiple gradient stop",
       "Added Tabler and Material Design icon sets",
-      "Randomize now picks from all icon sets randomly",
       "Added global icon search across all sets",
       "Added icon rotation control",
-      "Added mobile view with top",
+      "Added mobile view",
       "Added copy PNG to clipboard shortcut",
     ],
   },
