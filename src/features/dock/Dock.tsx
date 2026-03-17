@@ -59,7 +59,7 @@ export function Dock() {
               </Button>
             </Tooltip.Trigger>
             <Tooltip.Content>
-              <p className="text-xs">Undo (\u2318Z)</p>
+              <p className="text-xs">Undo (⌘Z)</p>
             </Tooltip.Content>
           </Tooltip>
 
@@ -79,7 +79,7 @@ export function Dock() {
                 </Button>
               </Tooltip.Trigger>
               <Tooltip.Content>
-                <p className="text-xs">Redo (\u2318\u21E7Z)</p>
+                <p className="text-xs">Redo (⌘⇧Z)</p>
               </Tooltip.Content>
             </Tooltip>
             <Divider />
@@ -185,6 +185,7 @@ export function Dock() {
                     value={iconRotation}
                     min={0}
                     max={360}
+                    unit="°"
                     onChange={(v) =>
                       set((d) => {
                         d.iconRotation = v;
