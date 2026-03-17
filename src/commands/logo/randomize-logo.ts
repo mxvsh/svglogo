@@ -1,7 +1,12 @@
+import { ICON_SETS } from "#/domain/icon/icon.types";
 import { getRandomLogoVisual } from "#/domain/logo/logo.randomizer";
 import { fetchCollection } from "#/infra/iconify/iconify-client";
 import { useLogoStore } from "#/store/logo-store";
 import { updateLogo } from "./update-logo";
+
+function randomPrefix(): string {
+  return ICON_SETS[Math.floor(Math.random() * ICON_SETS.length)].id;
+}
 
 const iconCollectionCache = new Map<string, string[]>();
 
@@ -20,8 +25,8 @@ export async function randomizeLogo(options: {
 }) {
   if (!options.icon && !options.background) return;
 
-  const { present, selectedIconPrefix } = useLogoStore.getState();
-  const prefix = options.icon ? selectedIconPrefix : present.iconName.split(":")[0];
+  const { present } = useLogoStore.getState();
+  const prefix = options.icon ? randomPrefix() : present.iconName.split(":")[0];
   const icons = await fetchAllIconsForPrefix(prefix);
   const next = getRandomLogoVisual(icons, present.iconName);
 
