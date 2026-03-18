@@ -19,6 +19,11 @@ async function fetchAllIconsForPrefix(prefix: string): Promise<string[]> {
   return icons;
 }
 
+function bumpRandomizeCount() {
+  const n = Number(localStorage.getItem("svglogo-randomize-count") ?? 0);
+  localStorage.setItem("svglogo-randomize-count", String(n + 1));
+}
+
 export async function randomizeLogo(
   options:
     | { smart: true }
@@ -27,6 +32,8 @@ export async function randomizeLogo(
   const { present } = useLogoStore.getState();
   const prefix = randomPrefix();
   const icons = await fetchAllIconsForPrefix(prefix);
+
+  bumpRandomizeCount();
 
   if (options.smart) {
     const next = getSmartLogoVisual(icons, present.iconName);
