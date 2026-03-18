@@ -128,8 +128,8 @@ export function FeedbackButton() {
               className="resize-none"
               variant="secondary"
             />
-            {/* Hidden Turnstile container */}
-            <div ref={containerRef} className="hidden" />
+            {/* Turnstile container — visually hidden but not display:none */}
+            <div ref={containerRef} className="absolute overflow-hidden w-0 h-0" />
             <Button
               size="sm"
               onPress={() => void submit()}

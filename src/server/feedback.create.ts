@@ -25,8 +25,8 @@ export const createFeedbackFn = createServerFn({ method: "POST" })
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ secret: turnstileSecret, response: data.token }),
       });
-      const result = await res.json<{ success: boolean }>();
-      if (!result.success) throw new Error("Verification failed");
+      const result = await res.json<{ success: boolean; "error-codes"?: string[] }>();
+      if (!result.success) throw new Error(`Turnstile failed: ${result["error-codes"]?.join(", ")}`);
     }
 
     // Rate limiting
