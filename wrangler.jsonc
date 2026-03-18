@@ -9,6 +9,9 @@
 	"observability": {
 		"enabled": true,
 	},
+	"vars": {
+		"VITE_TURNSTILE_SITE_KEY": "0x4AAAAAACsp6BY1heuKsB5N"
+	},
 	"kv_namespaces": [
 		{
 			"binding": "SHARE_KV",
@@ -19,4 +22,11 @@
 			"id": "5e33161f465f44eb809bc425baad8330"
 		},
 	],
+	"env": {
+		"production": {
+			"vars": {
+				"VITE_TURNSTILE_SITE_KEY": "0x4AAAAAACsp6BY1heuKsB5N"
+			}
+		}
+	}
 }

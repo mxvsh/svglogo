@@ -79,10 +79,11 @@ export function FeedbackButton() {
       await createFeedbackFn({ data: { message, token } });
       setStatus("success");
       setMessage("");
-      trackEvent("submit feedback");
+      trackEvent("feedback submitted");
       setTimeout(() => { setIsOpen(false); setStatus("idle"); }, 1500);
     } catch {
       setStatus("error");
+      trackEvent("feedback failed");
       setTimeout(() => setStatus("idle"), 2500);
     }
   };
