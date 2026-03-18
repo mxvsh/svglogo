@@ -41,7 +41,7 @@ export function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.28, ease: 'easeOut' }}
         >
-          Nothing is uploaded. Nothing is tracked. Everything stays in your browser.
+          Everything stays in your browser. 100% Open-source.
         </motion.p>
 
         {/* CTAs */}
