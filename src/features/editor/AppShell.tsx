@@ -1,7 +1,6 @@
 import { type Variants, motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { Tooltip } from "@heroui/react";
-import { TestimonialTicker } from "./TestimonialTicker";
 import type { LogoState } from "#/domain/logo/logo.types";
 import { loadLogoFromState } from "#/commands/logo/load-logo";
 import { CollectionsButton } from "#/features/collections/CollectionsButton";
@@ -62,10 +61,7 @@ export function AppShell({
       <MobileTopBar />
 
       <div className="hidden md:block">
-        <div className="pointer-events-auto absolute top-4 left-4 z-20">
-          <TestimonialTicker />
-        </div>
-        <FABs />
+<FABs />
         <motion.div
           variants={containerVariants}
           initial="hidden"

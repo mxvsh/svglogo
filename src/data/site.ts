@@ -12,6 +12,53 @@ export const SEO = {
   canonical: `${SITE_URL}/`,
 } as const
 
+export const FAQ_JSON_LD = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Is SVGLogo.dev really free?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes, completely. There are no tiers, no watermarks, no paid exports, and no limits. It has always been free and will always be free.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Do I need to create an account?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'No account, no email, no sign-up of any kind. Just open the editor and start creating.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is my data private?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Everything runs directly in your browser. Your logo designs are never sent to any server unless you explicitly click Share to generate a shareable link.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What file formats can I export?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'You can export SVG, PNG, and ICO. You can also generate complete platform icon packs for iOS, Android, macOS, and Web/PWA.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What icon sets are available?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Lucide, Material Design, Tabler, Phosphor, Simple Icons, and many more — over 300,000 icons in total via the Iconify library.',
+      },
+    },
+  ],
+})
+
 export const JSON_LD = JSON.stringify([
   {
     '@context': 'https://schema.org',

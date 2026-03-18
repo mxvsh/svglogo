@@ -9,7 +9,7 @@ import TanStackQueryProvider from '../integrations/tanstack-query/root-provider'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { JSON_LD, SEO, SITE_NAME, SITE_URL } from '../data/site'
+import { FAQ_JSON_LD, JSON_LD, SEO, SITE_NAME, SITE_URL } from '../data/site'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -58,6 +58,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           type="application/ld+json"
           // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
           dangerouslySetInnerHTML={{ __html: JSON_LD }}
+        />
+        <script
+          type="application/ld+json"
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: structured data
+          dangerouslySetInnerHTML={{ __html: FAQ_JSON_LD }}
         />
       </head>
       <body className="font-sans antialiased">
