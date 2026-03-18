@@ -97,7 +97,12 @@ export function InlineColorPicker({
             <ColorField.Prefix>
               <ColorSwatch size="xs" />
             </ColorField.Prefix>
-            <ColorField.Input />
+            <ColorField.Input
+              className="uppercase"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+              }}
+            />
           </ColorField.Group>
         </ColorField>
       </ColorPicker.Popover>
