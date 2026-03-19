@@ -7,8 +7,8 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "Mar 19, 2026",
     changes: [
-      "Add Text Mode",
-      "Add offset controls (X/Y)",
+      "Added Text Mode",
+      "Added offset controls (X/Y)",
       "ProductHunt Launch"
     ],
   },
