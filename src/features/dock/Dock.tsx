@@ -36,6 +36,10 @@ export function Dock() {
           <RandomizePopover />
         </div>
 
+        <div className="absolute bottom-full right-0 mb-2 md:hidden">
+          <RandomizePopover />
+        </div>
+
         <div className="hidden md:block absolute left-full top-1/2 ml-2 -translate-y-1/2">
           <HistoryButton />
         </div>

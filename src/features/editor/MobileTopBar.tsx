@@ -1,33 +1,19 @@
 import { Button, Dropdown, Label } from "@heroui/react";
-import { Icon } from "@iconify/react";
-import { useAnimate } from "framer-motion";
 import { useState } from "react";
 import { exportSvg } from "#/commands/export/export-svg";
 import { exportPng } from "#/commands/export/export-png";
 import { exportIco } from "#/commands/export/export-ico";
-import { randomizeLogo } from "#/commands/logo/randomize-logo";
 import { trackEvent } from "#/lib/analytics";
 import { CrownDiamond } from "@gravity-ui/icons";
 import { InfoModal } from "./InfoModal";
 
 export function MobileTopBar() {
-  const [scope, animate] = useAnimate();
   const [infoOpen, setInfoOpen] = useState(false);
 
   const handleAction = (key: React.Key) => {
     if (key === "svg") void exportSvg();
     else if (key === "png") void exportPng();
     else if (key === "ico") void exportIco();
-  };
-
-  const handleRandomize = async () => {
-    void animate(
-      scope.current,
-      { rotate: [0, 360] },
-      { duration: 0.35, ease: "easeOut" },
-    );
-    await randomizeLogo({ icon: true, background: true });
-    trackEvent("randomize logo", { icon: true, background: true });
   };
 
   return (
@@ -49,17 +35,6 @@ export function MobileTopBar() {
               Creator Plan
           </Button>
         </a>
-        <Button
-          isIconOnly
-          size="sm"
-          variant="ghost"
-          aria-label="Randomize"
-          onPress={() => void handleRandomize()}
-        >
-          <span ref={scope} style={{ display: "inline-flex" }}>
-            <Icon icon="lucide:dice-5" width={16} height={16} />
-          </span>
-        </Button>
         <Dropdown>
           <Button size="sm" variant="primary" aria-label="Export">
             Export
