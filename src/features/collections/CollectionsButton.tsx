@@ -55,16 +55,25 @@ export function CollectionsButton() {
                               : `linear-gradient(${logo.background.direction}deg, ${logo.background.stops[0].color}, ${logo.background.stops[1].color})`,
                         }}
                       >
-                        <Icon
-                          icon={logo.iconName}
-                          width={18}
-                          height={18}
-                          style={{ color: logo.iconColor }}
-                        />
+                        {logo.textMode && logo.logoText ? (
+                          <span
+                            className="text-[10px] font-bold leading-none truncate px-0.5"
+                            style={{ color: logo.iconColor, fontFamily: logo.fontFamily }}
+                          >
+                            {logo.logoText}
+                          </span>
+                        ) : (
+                          <Icon
+                            icon={logo.iconName}
+                            width={18}
+                            height={18}
+                            style={{ color: logo.iconColor }}
+                          />
+                        )}
                       </div>
                       <div className="flex flex-col flex-1 min-w-0">
                         <Label className="truncate text-xs font-medium">
-                          {logo.iconName.split(":")[1] || logo.iconName}
+                          {logo.textMode && logo.logoText ? logo.logoText : (logo.iconName.split(":")[1] || logo.iconName)}
                         </Label>
                         <Description className="text-[10px] opacity-70">
                           <time
