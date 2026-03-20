@@ -6,7 +6,7 @@ import confetti from "canvas-confetti";
 import { creatorSignupFn } from "#/server/creator-signup";
 import { LAUNCH_DATE } from "#/data/creator-plan";
 
-const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
+const TURNSTILE_SITE_KEY = "0x4AAAAAACsp6BY1heuKsB5N"
 const SCRIPT_ID = "cf-turnstile-script";
 
 const ease = [0.22, 1, 0.36, 1] as const;
