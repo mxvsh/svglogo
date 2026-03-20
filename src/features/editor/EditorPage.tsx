@@ -65,7 +65,7 @@ export function EditorPage() {
         (active as HTMLElement)?.isContentEditable;
       const hasSelection = (window.getSelection()?.toString().length ?? 0) > 0;
       if (inInput || hasSelection) return;
-      void copyPng();
+      copyPng().then((ok) => toast(ok ? "PNG copied" : "Copy failed"));
     },
     { mod: "cmd", preventDefault: false },
   );

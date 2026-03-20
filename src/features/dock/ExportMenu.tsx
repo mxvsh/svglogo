@@ -1,4 +1,4 @@
-import { Button, Dropdown, Label, Separator } from "@heroui/react";
+import { Button, Dropdown, Label, Separator, toast } from "@heroui/react";
 import { useState } from "react";
 import { exportSvg } from "#/commands/export/export-svg";
 import { exportPng } from "#/commands/export/export-png";
@@ -14,8 +14,8 @@ export function ExportMenu() {
     if (key === "svg") void exportSvg();
     else if (key === "png") void exportPng();
     else if (key === "ico") void exportIco();
-    else if (key === "copy-svg") void copySvg();
-    else if (key === "copy-png") void copyPng();
+    else if (key === "copy-svg") copySvg().then((ok) => toast(ok ? "SVG copied" : "Copy failed"));
+    else if (key === "copy-png") copyPng().then((ok) => toast(ok ? "PNG copied" : "Copy failed"));
     else if (key === "advanced") setAdvancedOpen(true);
   };
 

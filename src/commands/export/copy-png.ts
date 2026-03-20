@@ -1,17 +1,17 @@
 import { renderToCanvas } from "#/infra/canvas/canvas-renderer";
-import { writeImage } from "#/infra/clipboard/clipboard";
 import { trackEvent } from "#/lib/analytics";
 import { useLogoStore } from "#/store/logo-store";
 
 export async function copyPng(): Promise<boolean> {
   try {
     const state = useLogoStore.getState().present;
-    const canvas = await renderToCanvas(state, 512);
-    const blob = await new Promise<Blob | null>((resolve) =>
-      canvas.toBlob(resolve, "image/png"),
+    const blobPromise = renderToCanvas(state, 512).then(
+      (canvas) =>
+        new Promise<Blob>((resolve, reject) =>
+          canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/png"),
+        ),
     );
-    if (!blob) throw new Error("Failed to create blob");
-    await writeImage(blob);
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blobPromise })]);
     trackEvent("copy png", { icon: state.iconName });
     return true;
   } catch (err) {

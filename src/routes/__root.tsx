@@ -10,6 +10,7 @@ import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 import { FAQ_JSON_LD, JSON_LD, SEO, SITE_NAME, SITE_URL } from '../data/site'
+import { Toast } from '@heroui/react'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -74,6 +75,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="font-sans antialiased">
         <TanStackQueryProvider>
           {children}
+          <Toast.Provider placement='top' />
         </TanStackQueryProvider>
         <Scripts />
         {import.meta.env.PROD && (
