@@ -7,17 +7,31 @@ import { creatorSignupFn } from "#/server/creator-signup";
 import { LAUNCH_DATE } from "#/data/creator-plan";
 
 const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
+const SCRIPT_ID = "cf-turnstile-script";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 declare global {
   interface Window {
     turnstile?: {
-      render: (el: HTMLElement, opts: { sitekey: string; size: string }) => string;
+      render: (el: HTMLElement, opts: { sitekey: string; size: string; execution: string }) => string;
       execute: (id: string, opts: { callback: (t: string) => void; "error-callback": () => void }) => void;
       reset: (id: string) => void;
+      remove: (id: string) => void;
     };
   }
+}
+
+function loadTurnstileScript(): Promise<void> {
+  return new Promise((resolve) => {
+    if (document.getElementById(SCRIPT_ID)) { resolve(); return; }
+    const script = document.createElement("script");
+    script.id = SCRIPT_ID;
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    script.async = true;
+    script.onload = () => resolve();
+    document.head.appendChild(script);
+  });
 }
 
 export function EmailForm() {
@@ -30,17 +44,22 @@ export function EmailForm() {
 
   useEffect(() => {
     if (!TURNSTILE_SITE_KEY || !turnstileRef.current) return;
-    const script = document.createElement("script");
-    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    script.async = true;
-    document.head.appendChild(script);
-    script.onload = () => {
-      widgetId.current = window.turnstile?.render(turnstileRef.current!, {
+    let cancelled = false;
+    loadTurnstileScript().then(() => {
+      if (cancelled || !turnstileRef.current) return;
+      widgetId.current = window.turnstile?.render(turnstileRef.current, {
         sitekey: TURNSTILE_SITE_KEY,
         size: "invisible",
+        execution: "execute",
       }) ?? null;
+    });
+    return () => {
+      cancelled = true;
+      if (widgetId.current != null) {
+        window.turnstile?.remove(widgetId.current);
+        widgetId.current = null;
+      }
     };
-    return () => { document.head.removeChild(script); };
   }, []);
 
   const handleSignup = async () => {
@@ -50,8 +69,8 @@ export function EmailForm() {
     try {
       let token = "";
       if (TURNSTILE_SITE_KEY && widgetId.current != null) {
-        window.turnstile?.reset(widgetId.current);
         token = await new Promise<string>((resolve, reject) => {
+          window.turnstile?.reset(widgetId.current!);
           window.turnstile?.execute(widgetId.current!, {
             callback: resolve,
             "error-callback": () => reject(new Error("Bot check failed")),
@@ -68,7 +87,7 @@ export function EmailForm() {
       });
     } catch {
       setError("Something went wrong. Please try again.");
-      window.turnstile?.reset(widgetId.current!);
+      if (widgetId.current != null) window.turnstile?.reset(widgetId.current);
     } finally {
       setLoading(false);
     }
