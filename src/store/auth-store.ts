@@ -2,6 +2,8 @@ import { createStore } from "zustand/vanilla";
 
 export interface AuthUser {
   email: string;
+  fullName: string | null;
+  onboardingCompleted: boolean;
 }
 
 export interface AuthStoreState {

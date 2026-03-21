@@ -11,12 +11,13 @@ export function OAuthButtons() {
     const result = await oauthFn({
       data: {
         provider,
-        redirectTo: `${window.location.origin}/editor`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
     if (result?.url) {
       window.location.href = result.url;
+      return;
     }
     setLoading(null);
   }

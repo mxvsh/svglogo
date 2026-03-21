@@ -25,3 +25,6 @@ npm-debug.log*
 # cloudflare
 .wrangler
 .dev.vars
+
+# supabase
+supabase/.temp

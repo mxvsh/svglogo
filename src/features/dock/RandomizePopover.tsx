@@ -1,15 +1,23 @@
 import { Button, Label, Popover, Switch, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { Check } from "@gravity-ui/icons";
 import { motion } from "framer-motion";
 import { useState, useRef } from "react";
+import palettes from "nice-color-palettes/200.json";
 import { randomizeLogo } from "#/commands/logo/randomize-logo";
 import { trackEvent } from "#/lib/analytics";
 import { useLogoStore } from "#/store/logo-store";
+
+function arraysEqual(a: string[], b: string[]) {
+  return a.length === b.length && a.every((v, i) => v === b[i]);
+}
 
 export function RandomizePopover() {
   const textMode = useLogoStore((s) => s.present.textMode);
   const [diceRotation, setDiceRotation] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const [selectedPalette, setSelectedPalette] = useState<string[] | null>(null);
   const [custom, setCustom] = useState(false);
   const [randomizeIcon, setRandomizeIcon] = useState(true);
   const [randomizeIconColor, setRandomizeIconColor] = useState(true);
@@ -17,6 +25,7 @@ export function RandomizePopover() {
   const [randomizeFont, setRandomizeFont] = useState(true);
   const [randomizeFontColor, setRandomizeFontColor] = useState(true);
 
+  const usePalette = !!selectedPalette;
   const nothingSelected = custom && !randomizeBackground && (textMode ? (!randomizeFont && !randomizeFontColor) : (!randomizeIcon && !randomizeIconColor));
 
   const lastRun = useRef(0);
@@ -26,9 +35,10 @@ export function RandomizePopover() {
     if (now - lastRun.current < 400) return;
     lastRun.current = now;
     setDiceRotation((r) => r + 360);
+    const palette = selectedPalette ?? undefined;
     if (!custom) {
-      void randomizeLogo({ smart: true });
-      trackEvent("randomize logo", { mode: "smart", text_mode: textMode });
+      void randomizeLogo({ smart: true, palette });
+      trackEvent("randomize logo", { mode: "smart", text_mode: textMode, use_palette: usePalette });
     } else {
       if (nothingSelected) return;
       void randomizeLogo({
@@ -36,6 +46,7 @@ export function RandomizePopover() {
         iconColor: textMode ? randomizeFontColor : randomizeIconColor,
         background: randomizeBackground,
         font: textMode && randomizeFont,
+        palette,
       });
       trackEvent("randomize logo", {
         mode: "custom",
@@ -82,6 +93,72 @@ export function RandomizePopover() {
         <Popover.Content placement="top">
           <Popover.Dialog>
             <div className="flex w-56 flex-col gap-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-sm">Palette</Label>
+                  <p className="text-xs text-muted">Constrain colors</p>
+                </div>
+                <Popover isOpen={paletteOpen} onOpenChange={setPaletteOpen}>
+                  <Popover.Trigger>
+                    <button
+                      type="button"
+                      className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs text-muted hover:text-foreground transition-colors"
+                    >
+                      {selectedPalette ? (
+                        <div className="flex gap-0.5">
+                          {selectedPalette.map((c) => (
+                            <div key={c} className="size-3 rounded-sm" style={{ backgroundColor: c }} />
+                          ))}
+                        </div>
+                      ) : (
+                        "None"
+                      )}
+                      <Icon icon="lucide:chevron-down" width={12} />
+                    </button>
+                  </Popover.Trigger>
+                  <Popover.Content placement="right">
+                    <Popover.Dialog>
+                      <div className="flex flex-col gap-2 w-52">
+                        <button
+                          type="button"
+                          onClick={() => { setSelectedPalette(null); setPaletteOpen(false); }}
+                          className={`flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors ${
+                            !selectedPalette ? "bg-accent/10 text-accent" : "text-muted hover:text-foreground"
+                          }`}
+                        >
+                          None
+                          {!selectedPalette && <Check className="size-3" />}
+                        </button>
+                        <div className="grid grid-cols-3 gap-1.5 max-h-52 overflow-y-auto">
+                          {(palettes as string[][]).map((palette, i) => {
+                            const isActive = selectedPalette ? arraysEqual(selectedPalette, palette) : false;
+                            return (
+                              <button
+                                key={i}
+                                type="button"
+                                onClick={() => { setSelectedPalette(palette); setPaletteOpen(false); }}
+                                className={`relative flex h-7 rounded-md overflow-hidden transition-shadow ${
+                                  isActive ? "ring-2 ring-primary ring-offset-1 ring-offset-surface" : "hover:ring-1 hover:ring-border"
+                                }`}
+                              >
+                                {palette.map((color) => (
+                                  <div key={color} className="flex-1" style={{ backgroundColor: color }} />
+                                ))}
+                                {isActive && (
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                                    <Check className="size-3 text-white drop-shadow" />
+                                  </div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </Popover.Dialog>
+                  </Popover.Content>
+                </Popover>
+              </div>
+
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-sm">Custom</Label>

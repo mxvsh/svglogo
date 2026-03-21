@@ -16,8 +16,16 @@ const fetchUser = createServerFn({ method: 'GET' }).handler(async () => {
     return null
   }
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, onboarding_completed')
+    .eq('id', data.user.id)
+    .single()
+
   return {
     email: data.user.email,
+    fullName: (profile?.full_name as string | null) ?? null,
+    onboardingCompleted: profile?.onboarding_completed ?? false,
   }
 })
 
@@ -46,7 +54,11 @@ export const Route = createFileRoute('/editor')({
 
 function EditorRoute() {
   const { user } = Route.useRouteContext()
-  console.log(user);
   const { sharedLogo } = Route.useLoaderData()
-  return <AppShell sharedLogo={sharedLogo} user={user} />
+  return (
+    <AppShell
+      sharedLogo={sharedLogo}
+      user={user ? { email: user.email, fullName: user.fullName, onboardingCompleted: user.onboardingCompleted } : null}
+    />
+  )
 }

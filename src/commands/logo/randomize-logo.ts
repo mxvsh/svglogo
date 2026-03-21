@@ -62,8 +62,8 @@ function bumpStats(patch: Partial<RandomizeStats>) {
 
 export async function randomizeLogo(
   options:
-    | { smart: true }
-    | { smart?: false; icon: boolean; iconColor: boolean; background: boolean; font?: boolean },
+    | { smart: true; palette?: string[] }
+    | { smart?: false; icon: boolean; iconColor: boolean; background: boolean; font?: boolean; palette?: string[] },
 ) {
   const { present } = useLogoStore.getState();
   const prefix = randomPrefix();
@@ -71,7 +71,7 @@ export async function randomizeLogo(
 
   if (options.smart) {
     bumpStats({ total: 1, smart: 1, textMode: present.textMode ? 1 : 0 });
-    const next = getSmartLogoVisual(icons, present.iconName);
+    const next = getSmartLogoVisual(icons, present.iconName, options.palette);
     updateLogo((d) => {
       if (!present.textMode) {
         d.iconName = next.iconName;
@@ -102,7 +102,7 @@ export async function randomizeLogo(
     textMode: present.textMode ? 1 : 0,
   });
 
-  const next = getRandomLogoVisual(icons, present.iconName);
+  const next = getRandomLogoVisual(icons, present.iconName, options.palette);
   updateLogo((d) => {
     d.iconBorderWidth = 0;
     if (options.icon) d.iconName = next.iconName;

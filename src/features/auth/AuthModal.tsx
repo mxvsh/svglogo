@@ -12,14 +12,14 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   return (
     <Modal isOpen={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <Modal.Backdrop isDismissable>
-        <Modal.Container>
+        <Modal.Container className="sm:max-w-120">
           <Modal.Dialog>
             <Modal.CloseTrigger />
             <Modal.Header>
                <Modal.Heading>Login to SVGLogo</Modal.Heading>
             </Modal.Header>
-            <Modal.Body className="p-0">
-              <Tabs className="w-full mt-4" defaultSelectedKey="signin">
+            <Modal.Body className="pt-4">
+              <Tabs className="w-full" defaultSelectedKey="signin">
                 <Tabs.ListContainer>
                   <Tabs.List aria-label="Auth tabs">
                     <Tabs.Tab id="signin">

@@ -4,12 +4,14 @@ import type { LogoState } from "#/domain/logo/logo.types";
 import type { AuthUser } from "#/store/auth-store";
 import { loadLogoFromState } from "#/commands/logo/load-logo";
 import { AuthStoreProvider } from "#/providers/AuthStoreProvider";
-import { AuthBadge } from "#/features/auth/AuthBadge";
+import { UserMenuButton } from "#/features/user-menu/UserMenuButton";
 import { CollectionsButton } from "#/features/collections/CollectionsButton";
+import { GlobalUpgradeModal } from "#/features/creator-plan/GlobalUpgradeModal";
 import { ShareButton } from "#/features/share/ShareButton";
 import { EditorPage } from "./EditorPage";
 import { FABs } from "./FABs";
 import { MobileTopBar } from "./MobileTopBar";
+import { WelcomeOnboarding } from "#/features/onboarding/WelcomeOnboarding";
 import { OnboardingTour } from "./OnboardingTour";
 
 export function AppShell({
@@ -68,7 +70,7 @@ export function AppShell({
         <div className="hidden md:block">
           <FABs />
           <div className="absolute top-4 right-4 z-50">
-            <AuthBadge />
+            <UserMenuButton />
           </div>
           <motion.div
             variants={containerVariants}
@@ -85,6 +87,8 @@ export function AppShell({
           </motion.div>
         </div>
         <OnboardingTour />
+        <WelcomeOnboarding />
+        <GlobalUpgradeModal />
         <EditorPage />
       </div>
     </AuthStoreProvider>

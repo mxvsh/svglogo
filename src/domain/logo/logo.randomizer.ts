@@ -8,8 +8,11 @@ const SAFE_ICON_SIZES = [48, 52, 56, 60, 64];
 export function getSmartLogoVisual(
   iconList: string[],
   fallbackIconName = "lucide:heart",
+  brandPalette?: string[],
 ) {
-  const { bg, palette } = randomBackground();
+  const { bg, palette } = brandPalette?.length
+    ? randomBackgroundFromPalette(brandPalette)
+    : randomBackground();
   return {
     iconName: iconList.length > 0 ? randomFrom(iconList) : fallbackIconName,
     iconColor: pickIconColor(bg, palette),
@@ -25,8 +28,11 @@ export function getSmartLogoVisual(
 export function getRandomLogoVisual(
   iconList: string[],
   fallbackIconName = "lucide:heart",
+  brandPalette?: string[],
 ) {
-  const { bg, palette } = randomBackground();
+  const { bg, palette } = brandPalette?.length
+    ? randomBackgroundFromPalette(brandPalette)
+    : randomBackground();
   return {
     iconName: iconList.length > 0 ? randomFrom(iconList) : fallbackIconName,
     iconColor: pickIconColor(bg, palette),
@@ -43,6 +49,25 @@ function randomBeautifulHue(): number {
   // Sample from [0–69] ∪ [161–359], map linearly
   const n = randomInt(0, 268); // 70 + 199 - 1
   return n < 70 ? n : n + 91;
+}
+
+function randomBackgroundFromPalette(palette: string[]): { bg: Background; palette: string[] } {
+  if (Math.random() < SOLID_CHANCE || palette.length < 2) {
+    return { bg: { type: "solid", color: randomFrom(palette) }, palette };
+  }
+  const shuffled = [...palette].sort(() => Math.random() - 0.5);
+  const stopCount = Math.min(shuffled.length, Math.random() < 0.6 ? 2 : 3);
+  return {
+    bg: {
+      type: "gradient",
+      direction: randomInt(90, 225),
+      stops: shuffled.slice(0, stopCount).map((color, i) => ({
+        color,
+        position: Math.round((100 * i) / (stopCount - 1)),
+      })),
+    },
+    palette,
+  };
 }
 
 function randomBackground(): { bg: Background; palette?: string[] } {
