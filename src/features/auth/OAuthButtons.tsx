@@ -35,6 +35,7 @@ export function OAuthButtons() {
           className="w-full"
           isPending={loading === "google"}
           onPress={() => handleOAuth("google")}
+          data-umami-event="auth oauth google"
         >
           <Icon icon="simple-icons:google" width={16} height={16} />
           Sign in with Google
@@ -44,6 +45,7 @@ export function OAuthButtons() {
           className="w-full"
           isPending={loading === "github"}
           onPress={() => handleOAuth("github")}
+          data-umami-event="auth oauth github"
         >
           <Icon icon="simple-icons:github" width={16} height={16} />
           Sign in with GitHub

@@ -50,7 +50,7 @@ export function SignInTab({ onClose }: { onClose: () => void }) {
         <FieldError />
       </TextField>
       {error && <p className="text-xs text-danger">{error}</p>}
-      <Button type="submit" variant="primary" isPending={loading} className="w-full">
+      <Button type="submit" variant="primary" isPending={loading} className="w-full" data-umami-event="auth sign in">
         Sign In
       </Button>
     </Form>

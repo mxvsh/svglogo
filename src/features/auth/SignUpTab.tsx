@@ -66,7 +66,7 @@ export function SignUpTab() {
         <FieldError />
       </TextField>
       {error && <p className="text-xs text-danger">{error}</p>}
-      <Button type="submit" variant="primary" isPending={loading} className="w-full">
+      <Button type="submit" variant="primary" isPending={loading} className="w-full" data-umami-event="auth sign up">
         Create Account
       </Button>
     </Form>

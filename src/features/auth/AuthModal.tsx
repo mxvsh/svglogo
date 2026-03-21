@@ -1,4 +1,5 @@
-import { Modal, Tabs } from "@heroui/react";
+import { Modal } from "@heroui/react";
+import { useState } from "react";
 import { SignInTab } from "./SignInTab";
 import { SignUpTab } from "./SignUpTab";
 import { OAuthButtons } from "./OAuthButtons";
@@ -9,38 +10,37 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+
   return (
     <Modal isOpen={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <Modal.Backdrop isDismissable>
         <Modal.Container className="sm:max-w-120">
           <Modal.Dialog>
             <Modal.CloseTrigger />
-            <Modal.Header>
-               <Modal.Heading>Login to SVGLogo</Modal.Heading>
+            <Modal.Header className="pt-5 flex items-center">
+              <img src="/logo512.png" alt="SVGLogo" className="w-16 h-16 rounded-xl" />
             </Modal.Header>
-            <Modal.Body className="pt-4">
-              <Tabs className="w-full" defaultSelectedKey="signin">
-                <Tabs.ListContainer>
-                  <Tabs.List aria-label="Auth tabs">
-                    <Tabs.Tab id="signin">
-                      Sign In
-                      <Tabs.Indicator className="bg-accent" />
-                    </Tabs.Tab>
-                    <Tabs.Tab id="signup">
-                      Sign Up
-                      <Tabs.Indicator className="bg-accent" />
-                    </Tabs.Tab>
-                  </Tabs.List>
-                </Tabs.ListContainer>
-
-                <Tabs.Panel id="signin">
-                  <SignInTab onClose={onClose} />
-                </Tabs.Panel>
-                <Tabs.Panel id="signup">
-                  <SignUpTab />
-                </Tabs.Panel>
-              </Tabs>
+            <Modal.Body className="p-4">
+              {mode === "signin" ? <SignInTab onClose={onClose} /> : <SignUpTab />}
               <OAuthButtons />
+              <p className="text-center text-xs text-muted mt-4">
+                {mode === "signin" ? (
+                  <>
+                    Don't have an account?{" "}
+                    <button type="button" onClick={() => setMode("signup")} className="text-accent hover:underline font-medium">
+                      Sign up
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    Already have an account?{" "}
+                    <button type="button" onClick={() => setMode("signin")} className="text-accent hover:underline font-medium">
+                      Sign in
+                    </button>
+                  </>
+                )}
+              </p>
             </Modal.Body>
           </Modal.Dialog>
         </Modal.Container>
