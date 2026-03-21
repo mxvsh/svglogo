@@ -24,7 +24,7 @@ export function SignInTab({ onClose }: { onClose: () => void }) {
       return;
     }
 
-    setUser({ email, fullName: null, onboardingCompleted: false });
+    setUser({ email, fullName: null, onboardingCompleted: false, earlyAccess: null, plan: "free" });
     setLoading(false);
     onClose();
   }

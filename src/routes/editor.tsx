@@ -16,16 +16,25 @@ const fetchUser = createServerFn({ method: 'GET' }).handler(async () => {
     return null
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('full_name, onboarding_completed')
-    .eq('id', data.user.id)
-    .single()
+  const [{ data: profile }, { data: planRow }] = await Promise.all([
+    supabase
+      .from('profiles')
+      .select('full_name, onboarding_completed, early_access')
+      .eq('id', data.user.id)
+      .single(),
+    supabase
+      .from('plans')
+      .select('plan')
+      .eq('id', data.user.id)
+      .single(),
+  ])
 
   return {
     email: data.user.email,
     fullName: (profile?.full_name as string | null) ?? null,
     onboardingCompleted: profile?.onboarding_completed ?? false,
+    earlyAccess: (profile?.early_access as boolean | null) ?? null,
+    plan: (planRow?.plan as string) ?? 'free',
   }
 })
 
@@ -58,7 +67,7 @@ function EditorRoute() {
   return (
     <AppShell
       sharedLogo={sharedLogo}
-      user={user ? { email: user.email, fullName: user.fullName, onboardingCompleted: user.onboardingCompleted } : null}
+      user={user ? { email: user.email, fullName: user.fullName, onboardingCompleted: user.onboardingCompleted, earlyAccess: user.earlyAccess, plan: user.plan } : null}
     />
   )
 }

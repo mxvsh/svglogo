@@ -5,6 +5,9 @@ import { buildSocialSvg } from "#/domain/logo/logo.social-builder";
 import { download } from "#/infra/download/file-download";
 import { trackEvent } from "#/lib/analytics";
 import { useLogoStore } from "#/store/logo-store";
+import type { BrandKitStyle, BrandKitLayout, SocialTextOptions } from "#/domain/brand-kit/brand-kit.types";
+import { resolveBackground, resolveTextColor } from "#/domain/brand-kit/brand-kit.styles";
+import { getFontByFamily } from "#/domain/logo/logo.fonts";
 
 function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   return new Promise((resolve, reject) => {
@@ -43,7 +46,12 @@ export interface BrandKitOptions {
   includeSvg: boolean;
   includePng: boolean;
   includeLogo: boolean;
+  title?: string;
+  tagline?: string;
+  style?: BrandKitStyle;
+  layout?: BrandKitLayout;
 }
+
 
 export async function exportBrandKit(options: BrandKitOptions) {
   const state = useLogoStore.getState().present;
@@ -66,10 +74,27 @@ export async function exportBrandKit(options: BrandKitOptions) {
 
   if (selectedAssets.length > 0) {
     const logoSvg = await buildCanvasSvg(state, 512);
+    const style = options.style ?? "minimal";
+    const layout = options.layout ?? "centered";
+    const bg = resolveBackground(style, state.background);
+    const textColor = resolveTextColor(style, bg);
+    const font = getFontByFamily(state.fontFamily);
+
+    const textOpts: SocialTextOptions | undefined =
+      options.title || options.tagline
+        ? {
+            title: options.title,
+            tagline: options.tagline,
+            fontFamily: state.fontFamily,
+            fontWeight: font?.weight ?? 700,
+            textColor,
+            layout,
+          }
+        : undefined;
 
     await Promise.all(
       selectedAssets.map(async (asset) => {
-        const socialSvg = buildSocialSvg(logoSvg, state.background, asset.width, asset.height);
+        const socialSvg = buildSocialSvg(logoSvg, bg, asset.width, asset.height, textOpts);
 
         if (options.includeSvg) {
           zip.file(`${asset.folder}/${asset.filename}.svg`, socialSvg);

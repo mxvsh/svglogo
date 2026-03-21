@@ -1,6 +1,9 @@
 import { Button, Modal } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import { useState } from "react";
 import { LAUNCH_DATE } from "#/data/creator-plan";
+import { signUpEarlyAccess } from "#/commands/auth/sign-up-early-access";
+import { useAuth } from "#/queries/auth/use-auth";
 
 const FEATURES = [
   { icon: "lucide:type", label: "Premium fonts and icons" },
@@ -21,6 +24,19 @@ interface CreatorPlanModalProps {
 }
 
 export function CreatorPlanModal({ isOpen, onClose }: CreatorPlanModalProps) {
+  const user = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const alreadySignedUp = user?.earlyAccess === true;
+
+  const handleSignUp = async () => {
+    setIsLoading(true);
+    try {
+      await signUpEarlyAccess();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Modal isOpen={isOpen} onOpenChange={onClose}>
       <Modal.Backdrop isDismissable={false}>
@@ -69,14 +85,35 @@ export function CreatorPlanModal({ isOpen, onClose }: CreatorPlanModalProps) {
                 </p>
               </div>
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className="flex flex-col gap-2">
+              {alreadySignedUp ? (
+                <Button
+                  variant="primary"
+                  className="w-full"
+                  isDisabled
+                >
+                  <Icon icon="lucide:check" width={14} />
+                  You're on the early access list
+                </Button>
+              ) : (
+                <Button
+                  variant="primary"
+                  className="w-full"
+                  onPress={handleSignUp}
+                  isPending={isLoading}
+                  isDisabled={isLoading}
+                  data-umami-event="creator plan modal early access"
+                >
+                  Sign up for early access
+                </Button>
+              )}
               <a href="/creator" target="_blank" rel="noopener noreferrer" className="w-full">
                 <Button
+                  variant="outline"
                   className="w-full"
-                  data-umami-event="creator plan modal lean more"
+                  data-umami-event="creator plan modal learn more"
                 >
-                  Learn more & get early access
-                  <Icon icon="lucide:arrow-up-right" width={14} />
+                  Learn more
                 </Button>
               </a>
             </Modal.Footer>

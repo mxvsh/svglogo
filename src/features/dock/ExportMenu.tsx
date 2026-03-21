@@ -7,10 +7,14 @@ import { copySvg } from "#/commands/export/copy-svg";
 import { copyPng } from "#/commands/export/copy-png";
 import { AdvancedExportModal } from "./AdvancedExportModal";
 import { BrandKitModal } from "./BrandKitModal";
+import { useAuth } from "#/queries/auth/use-auth";
 
 export function ExportMenu() {
+  const user = useAuth();
   const [advancedOpen, setAdvancedOpen] = useState(false);
   const [brandKitOpen, setBrandKitOpen] = useState(false);
+
+  const isCreator = user?.plan === "creator";
 
   const handleAction = (key: React.Key) => {
     if (key === "svg") void exportSvg();
@@ -55,9 +59,11 @@ export function ExportMenu() {
             <Dropdown.Item id="advanced">
               <Label>Advanced export…</Label>
             </Dropdown.Item>
-            <Dropdown.Item id="brand-kit">
-              <Label>Brand kit…</Label>
-            </Dropdown.Item>
+            {isCreator && (
+              <Dropdown.Item id="brand-kit">
+                <Label>Brand kit…</Label>
+              </Dropdown.Item>
+            )}
           </Dropdown.Menu>
         </Dropdown.Popover>
       </Dropdown>
@@ -66,10 +72,12 @@ export function ExportMenu() {
         isOpen={advancedOpen}
         onClose={() => setAdvancedOpen(false)}
       />
-      <BrandKitModal
-        isOpen={brandKitOpen}
-        onClose={() => setBrandKitOpen(false)}
-      />
+      {isCreator && (
+        <BrandKitModal
+          isOpen={brandKitOpen}
+          onClose={() => setBrandKitOpen(false)}
+        />
+      )}
     </>
   );
 }

@@ -4,6 +4,8 @@ export interface AuthUser {
   email: string;
   fullName: string | null;
   onboardingCompleted: boolean;
+  earlyAccess: boolean | null;
+  plan: string;
 }
 
 export interface AuthStoreState {

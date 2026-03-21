@@ -2,6 +2,7 @@ import { Avatar, Dropdown, Label } from "@heroui/react";
 import {
   ArrowRightFromSquare,
   CrownDiamond,
+  Person,
 } from "@gravity-ui/icons";
 import type { AuthUser } from "#/store/auth-store";
 import { signoutFn } from "#/server/auth";
@@ -17,6 +18,8 @@ function getInitials(name: string | null, email: string) {
 }
 
 export function UserMenu({ user }: { user: AuthUser }) {
+  const isCreator = user.plan === "creator";
+
   async function handleSignOut() {
     await signoutFn();
     setUser(null);
@@ -25,6 +28,7 @@ export function UserMenu({ user }: { user: AuthUser }) {
   function handleAction(key: React.Key) {
     if (key === "signout") handleSignOut();
     if (key === "upgrade") openUpgradeModal();
+    if (key === "account") window.open("/account", "_blank");
   }
 
   return (
@@ -50,12 +54,20 @@ export function UserMenu({ user }: { user: AuthUser }) {
         </div>
         <Dropdown.Menu onAction={handleAction}>
           <Dropdown.Section>
-            <Dropdown.Item id="upgrade" textValue="Creator Plan">
+            <Dropdown.Item id="account" textValue="My Account">
               <div className="flex w-full items-center justify-between gap-2">
-                <Label>Creator Plan</Label>
-                <CrownDiamond className="size-3.5 text-muted" />
+                <Label>My Account</Label>
+                <Person className="size-3.5 text-muted" />
               </div>
             </Dropdown.Item>
+            {!isCreator && (
+              <Dropdown.Item id="upgrade" textValue="Buy Creator Plan">
+                <div className="flex w-full items-center justify-between gap-2">
+                  <Label>Buy Creator Plan</Label>
+                  <CrownDiamond className="size-3.5 text-muted" />
+                </div>
+              </Dropdown.Item>
+            )}
           </Dropdown.Section>
           <Dropdown.Section>
             <Dropdown.Item id="signout" textValue="Sign out" variant="danger">

@@ -1,4 +1,6 @@
 import type { Background } from "./logo.types";
+import type { SocialTextOptions } from "#/domain/brand-kit/brand-kit.types";
+import { getFontByFamily, getFontGoogleUrl } from "./logo.fonts";
 
 function buildSvgBackground(bg: Background): { defs: string; fill: string } {
   if (bg.type === "solid") {
@@ -19,32 +21,94 @@ function buildSvgBackground(bg: Background): { defs: string; fill: string } {
   return { defs, fill: "url(#social-bg)" };
 }
 
+function escapeXml(s: string): string {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 export function buildSocialSvg(
   logoSvg: string,
   background: Background,
   width: number,
   height: number,
+  textOptions?: SocialTextOptions,
 ): string {
   const { defs: bgDefs, fill } = buildSvgBackground(background);
+  const hasText = textOptions && (textOptions.title || textOptions.tagline);
+  const min = Math.min(width, height);
 
-  const logoSize = Math.round(Math.min(width, height) * 0.4);
-  const logoX = Math.round((width - logoSize) / 2);
-  const logoY = Math.round((height - logoSize) / 2);
+  // Logo positioning depends on layout and whether text is present
+  let logoSize: number;
+  let logoX: number;
+  let logoY: number;
+
+  if (!hasText) {
+    logoSize = Math.round(min * 0.4);
+    logoX = Math.round((width - logoSize) / 2);
+    logoY = Math.round((height - logoSize) / 2);
+  } else if (textOptions.layout === "landscape") {
+    logoSize = Math.round(min * 0.35);
+    logoX = Math.round(width * 0.12);
+    logoY = Math.round((height - logoSize) / 2);
+  } else {
+    // centered with text — logo moves up
+    logoSize = Math.round(min * 0.3);
+    logoX = Math.round((width - logoSize) / 2);
+    logoY = Math.round(height * 0.18);
+  }
 
   const vbMatch = logoSvg.match(/viewBox="([^"]*)"/);
   const viewBox = vbMatch?.[1] ?? "0 0 512 512";
 
-  // Strip width/height from the logo SVG and embed as a nested <svg> element.
-  // A nested <svg> creates its own coordinate space, so all internal refs
-  // (clip-paths, gradients, etc.) work without any defs extraction.
   const nestedSvg = logoSvg
     .replace(/\bwidth="[^"]*"/, `width="${logoSize}"`)
     .replace(/\bheight="[^"]*"/, `height="${logoSize}"`)
     .replace(/viewBox="[^"]*"/, `viewBox="${viewBox}" x="${logoX}" y="${logoY}"`);
 
+  // Build text elements
+  let textElements = "";
+  let fontStyle = "";
+
+  if (hasText) {
+    const family = textOptions.fontFamily ?? "Inter";
+    const weight = textOptions.fontWeight ?? (getFontByFamily(family)?.weight ?? 700);
+    const color = textOptions.textColor ?? "#FFFFFF";
+    const titleSize = Math.round(min * 0.06);
+    const taglineSize = Math.round(min * 0.035);
+
+    fontStyle = `<style>@import url('${getFontGoogleUrl(family, weight)}');</style>`;
+
+    if (textOptions.layout === "landscape") {
+      const textX = logoX + logoSize + Math.round(width * 0.05);
+      const centerY = height / 2;
+
+      if (textOptions.title && textOptions.tagline) {
+        const gap = titleSize * 0.4;
+        textElements += `<text x="${textX}" y="${centerY - gap}" dominant-baseline="auto" font-family="'${family}', sans-serif" font-weight="${weight}" font-size="${titleSize}" fill="${color}">${escapeXml(textOptions.title)}</text>`;
+        textElements += `<text x="${textX}" y="${centerY + taglineSize + gap}" dominant-baseline="auto" font-family="'${family}', sans-serif" font-weight="400" font-size="${taglineSize}" fill="${color}" opacity="0.7">${escapeXml(textOptions.tagline)}</text>`;
+      } else if (textOptions.title) {
+        textElements += `<text x="${textX}" y="${centerY}" dominant-baseline="central" font-family="'${family}', sans-serif" font-weight="${weight}" font-size="${titleSize}" fill="${color}">${escapeXml(textOptions.title)}</text>`;
+      } else if (textOptions.tagline) {
+        textElements += `<text x="${textX}" y="${centerY}" dominant-baseline="central" font-family="'${family}', sans-serif" font-weight="400" font-size="${taglineSize}" fill="${color}" opacity="0.7">${escapeXml(textOptions.tagline)}</text>`;
+      }
+    } else {
+      // centered layout
+      const textCenterX = width / 2;
+      let textY = logoY + logoSize + Math.round(min * 0.06);
+
+      if (textOptions.title) {
+        textElements += `<text x="${textCenterX}" y="${textY}" text-anchor="middle" dominant-baseline="hanging" font-family="'${family}', sans-serif" font-weight="${weight}" font-size="${titleSize}" fill="${color}">${escapeXml(textOptions.title)}</text>`;
+        textY += titleSize + Math.round(min * 0.02);
+      }
+      if (textOptions.tagline) {
+        textElements += `<text x="${textCenterX}" y="${textY}" text-anchor="middle" dominant-baseline="hanging" font-family="'${family}', sans-serif" font-weight="400" font-size="${taglineSize}" fill="${color}" opacity="0.7">${escapeXml(textOptions.tagline)}</text>`;
+      }
+    }
+  }
+
   return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${width} ${height}">
-  ${bgDefs ? `<defs>${bgDefs}</defs>` : ""}
+  <defs>${bgDefs}${fontStyle}</defs>
   <rect width="${width}" height="${height}" fill="${fill}"/>
   ${nestedSvg}
+  ${textElements}
 </svg>`;
 }

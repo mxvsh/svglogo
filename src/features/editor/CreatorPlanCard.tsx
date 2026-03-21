@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { LAUNCH_DATE, PRICE_ONE_TIME, PRICE_ONE_TIME_EARLY, EARLY_ACCESS_DISCOUNT } from "#/data/creator-plan";
 import { ArrowRight } from "@gravity-ui/icons";
+import { useAuth } from "#/queries/auth/use-auth";
 
 const LS_KEY = "creator_card_collapsed";
 
@@ -16,6 +17,10 @@ const CREATOR_FEATURES = [
 ];
 
 export function CreatorPlanCard() {
+  const user = useAuth();
+
+  if (user?.earlyAccess === true) return null;
+
   const [collapsed, setCollapsed] = useState(
     () => typeof window !== "undefined" && localStorage.getItem(LS_KEY) === "1",
   );
