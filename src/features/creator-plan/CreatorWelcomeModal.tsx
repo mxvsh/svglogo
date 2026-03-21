@@ -3,15 +3,7 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import confetti from "canvas-confetti";
 import { completeCreatorOnboarding } from "#/commands/auth/complete-creator-onboarding";
-
-const UNLOCKED = [
-  { icon: "lucide:type", label: "Premium fonts & icon sets" },
-  { icon: "lucide:swatch-book", label: "Curated color palettes" },
-  { icon: "lucide:image", label: "Infinite logo variations" },
-  { icon: "lucide:package", label: "Full brand kit export" },
-  { icon: "lucide:monitor-smartphone", label: "Social media & app store assets" },
-  { icon: "lucide:sparkles", label: "Logo effects & animations" },
-];
+import { CREATOR_FEATURES } from "#/data/features";
 
 interface CreatorWelcomeModalProps {
   isOpen: boolean;
@@ -56,7 +48,7 @@ export function CreatorWelcomeModal({ isOpen, onClose }: CreatorWelcomeModalProp
                   Unlocked for you
                 </p>
                 <ul className="flex flex-col gap-2">
-                  {UNLOCKED.map((f) => (
+                  {CREATOR_FEATURES.slice(0, 6).map((f) => (
                     <li key={f.label} className="flex items-center gap-2.5">
                       <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
                         <Icon icon={f.icon} width={12} className="text-primary" />

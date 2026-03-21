@@ -12,13 +12,9 @@ import { getPriceFn } from "#/server/payment.get-price";
 import { buyCreatorPlan } from "#/commands/payment/buy-creator-plan";
 import { useAuth } from "#/queries/auth/use-auth";
 
-const FEATURES_SHORT = [
-  "Premium fonts & icons",
-  "Brand kit export",
-  "Infinite logo variations",
-  "Social media assets",
-  "and more...",
-];
+import { CREATOR_FEATURES } from "#/data/features";
+
+const FEATURES_SHORT = [...CREATOR_FEATURES.slice(0, 4).map((f) => f.label), "and more..."];
 
 const CURRENCIES: { value: Currency; label: string; flag: string }[] = [
   { value: "INR", label: "INR", flag: "🇮🇳" },

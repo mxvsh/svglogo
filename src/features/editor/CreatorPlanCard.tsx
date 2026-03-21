@@ -8,13 +8,9 @@ import { useAuth } from "#/queries/auth/use-auth";
 
 const LS_KEY = "creator_card_collapsed";
 
-const CREATOR_FEATURES = [
-  "Brand kit download",
-  "Premium fonts & icon sets",
-  "Abstract logo generator",
-  "Infinite logo variations",
-  "Social media assets export",
-];
+import { CREATOR_FEATURES } from "#/data/features";
+
+const TOP_CREATOR_FEATURES = CREATOR_FEATURES.slice(0, 5);
 
 export function CreatorPlanCard() {
   const user = useAuth();
@@ -74,10 +70,10 @@ export function CreatorPlanCard() {
             >
               <div className="px-4 pb-4">
                 <ul className="mb-4 space-y-1.5">
-                  {CREATOR_FEATURES.map((label) => (
-                    <li key={label} className="flex items-center gap-2 text-xs text-muted">
-                      <Icon icon="lucide:sparkles" width={11} className="shrink-0 text-primary/60" />
-                      {label}
+                  {TOP_CREATOR_FEATURES.map((f) => (
+                    <li key={f.label} className="flex items-center gap-2 text-xs text-muted">
+                      <Icon icon={f.icon} width={11} className="shrink-0 text-primary/60" />
+                      {f.label}
                     </li>
                   ))}
                   <li className="flex items-center gap-2 text-xs text-muted/50">

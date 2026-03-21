@@ -2,16 +2,12 @@ import { Button, Modal } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { LAUNCH_DATE } from "#/data/creator-plan";
+import { CREATOR_FEATURES } from "#/data/features";
 import { signUpEarlyAccess } from "#/commands/auth/sign-up-early-access";
 import { useCheckoutStore } from "#/store/checkout-store";
 import { useAuth } from "#/queries/auth/use-auth";
 
-const FEATURES = [
-  { icon: "lucide:type", label: "Premium fonts and icons" },
-  { icon: "lucide:swatch-book", label: "Curated color palette" },
-  { icon: "lucide:image", label: "Infinite logo variations" },
-  { icon: "lucide:package", label: "Full brand kit export (Instagram, Twitter, LinkedIn)" },
-];
+const TOP_FEATURES = CREATOR_FEATURES.slice(0, 4);
 
 const FOR_WHO = [
   "Freelancers & agencies",
@@ -76,7 +72,7 @@ export function CreatorPlanModal({ isOpen, onClose }: CreatorPlanModalProps) {
                 <div className="flex flex-col gap-1.5">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-muted/50">What's included</p>
                   <ul className="flex flex-col gap-1.5">
-                    {FEATURES.map((f) => (
+                    {TOP_FEATURES.map((f) => (
                       <li key={f.label} className="flex items-center gap-2.5">
                         <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
                           <Icon icon={f.icon} width={12} className="text-primary" />
