@@ -30,8 +30,8 @@ const fetchUser = createServerFn({ method: 'GET' }).handler(async () => {
     supabase
       .from('early_access')
       .select('status')
-      .eq('id', data.user.id)
-      .single(),
+      .eq('email', data.user.email.toLowerCase())
+      .maybeSingle(),
   ])
 
   const earlyAccess: 'none' | 'pending' | 'approved' =

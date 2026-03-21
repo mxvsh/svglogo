@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { env } from "cloudflare:workers";
+import { getSupabaseServiceClient } from "#/lib/supabase";
 
 export const creatorSignupFn = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => data as { email: string; token: string })
@@ -11,7 +12,7 @@ export const creatorSignupFn = createServerFn({ method: "POST" })
     }
 
     const cfEnv = env;
-    
+
     if (cfEnv.TELEGRAM_BOT_TOKEN && cfEnv.TELEGRAM_CHAT_ID) {
       await fetch(`https://api.telegram.org/bot${cfEnv.TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: "POST",
@@ -22,8 +23,6 @@ export const creatorSignupFn = createServerFn({ method: "POST" })
         }),
       });
     }
-    
-    console.log(cfEnv.TELEGRAM_BOT_TOKEN)
 
     if (cfEnv.TURNSTILE_SECRET) {
       const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
@@ -35,10 +34,10 @@ export const creatorSignupFn = createServerFn({ method: "POST" })
       if (!result.success) throw new Error(`Turnstile failed: ${result["error-codes"]?.join(", ")}`);
     }
 
-    if (!cfEnv.CREATOR_EARLY_SIGNUP) throw new Error("KV not configured");
-
-    const key = `email:${email.toLowerCase().trim()}`;
-    await cfEnv.CREATOR_EARLY_SIGNUP.put(key, JSON.stringify({ email, signedUpAt: Date.now() }));
+    const supabase = getSupabaseServiceClient();
+    await supabase
+      .from("early_access")
+      .upsert({ email: email.toLowerCase().trim() }, { onConflict: "email" });
 
     return { ok: true };
   });

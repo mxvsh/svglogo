@@ -6,7 +6,8 @@
       "Bash(find)",
       "Bash(bun run:*)",
       "Bash(npx tsc:*)",
-      "Bash(grep -E \"\\\\.tsx$\")"
+      "Bash(grep -E \"\\\\.tsx$\")",
+      "Bash(bun add:*)"
     ]
   }
 }

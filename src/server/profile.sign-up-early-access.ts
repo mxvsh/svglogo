@@ -1,4 +1,4 @@
-import { getSupabaseServerClient } from "#/lib/supabase";
+import { getSupabaseServerClient, getSupabaseServiceClient } from "#/lib/supabase";
 import { createServerFn } from "@tanstack/react-start";
 
 export const signUpEarlyAccessFn = createServerFn({ method: "POST" }).handler(
@@ -6,10 +6,16 @@ export const signUpEarlyAccessFn = createServerFn({ method: "POST" }).handler(
     const supabase = getSupabaseServerClient();
     const { data } = await supabase.auth.getUser();
 
-    if (!data.user) return;
+    if (!data.user?.email) return;
 
-    await supabase
+    const service = getSupabaseServiceClient();
+    const { error } = await service
       .from("early_access")
-      .upsert({ id: data.user.id, status: false });
+      .upsert({ email: data.user.email.toLowerCase().trim() }, { onConflict: "email" });
+
+    if (error) {
+      console.error("early_access upsert failed:", error);
+      throw new Error(error.message);
+    }
   },
 );
