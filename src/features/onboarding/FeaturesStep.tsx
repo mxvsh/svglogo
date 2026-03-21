@@ -1,19 +1,19 @@
 import { Description, Label, ListBox } from "@heroui/react";
-import { CloudCheck, Palette, Dice5 } from "@gravity-ui/icons";
+import { CloudCheck, Palette, Eye } from "@gravity-ui/icons";
 import { motion } from "framer-motion";
 
 const FEATURES = [
   {
     id: "palettes",
-    label: "Curated color palettes",
-    desc: "200 hand-picked palettes to constrain your colors",
+    label: "Color palettes",
+    desc: "150+ curated palettes to constrain your colors",
     icon: <Palette className="size-4" />,
   },
   {
-    id: "randomize",
-    label: "Smart randomizer",
-    desc: "One-click logo generation with palette support",
-    icon: <Dice5 className="size-4" />,
+    id: "preview",
+    label: "Preview",
+    desc: "How your logo looks on different platforms",
+    icon: <Eye className="size-4" />,
   },
   {
     id: "sync",

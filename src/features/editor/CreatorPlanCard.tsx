@@ -22,7 +22,7 @@ export function CreatorPlanCard() {
     () => typeof window !== "undefined" && localStorage.getItem(LS_KEY) === "1",
   );
 
-  if (user?.earlyAccess === true) return null;
+  if (user?.plan === "creator") return null;
 
   function toggle() {
     const next = !collapsed;
