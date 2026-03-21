@@ -25,6 +25,7 @@ export const signupFn = createServerFn({ method: 'POST' })
     const { error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
+      options: { emailRedirectTo: 'https://svglogo.dev/auth/callback' },
     })
 
     if (error) {
@@ -46,7 +47,7 @@ export const resendConfirmationFn = createServerFn({ method: 'POST' })
   .inputValidator((d: { email: string }) => d)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServerClient()
-    await supabase.auth.resend({ type: 'signup', email: data.email })
+    await supabase.auth.resend({ type: 'signup', email: data.email, options: { emailRedirectTo: 'https://svglogo.dev/auth/callback' } })
   })
 
 export const oauthFn = createServerFn({ method: 'POST' })
