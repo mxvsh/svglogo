@@ -42,6 +42,7 @@
     "nice-color-palettes": "^4.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "shiki": "^4.0.2",
     "tailwindcss": "^4.1.18",
     "timeago.js": "^4.0.2",
     "zustand": "^5.0.12"
