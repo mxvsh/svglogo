@@ -51,6 +51,7 @@ export function RandomizePopover() {
       trackEvent("randomize logo", {
         mode: "custom",
         text_mode: textMode,
+        use_palette: usePalette,
         ...(textMode
           ? { font_style: randomizeFont, font_color: randomizeFontColor, background: randomizeBackground }
           : { icon: randomizeIcon, icon_color: randomizeIconColor, background: randomizeBackground }),
@@ -122,6 +123,7 @@ export function RandomizePopover() {
                         <button
                           type="button"
                           onClick={() => { setSelectedPalette(null); setPaletteOpen(false); }}
+                          data-umami-event="palette removed"
                           className={`flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors ${
                             !selectedPalette ? "bg-accent/10 text-accent" : "text-muted hover:text-foreground"
                           }`}
@@ -137,6 +139,7 @@ export function RandomizePopover() {
                                 key={i}
                                 type="button"
                                 onClick={() => { setSelectedPalette(palette); setPaletteOpen(false); }}
+                                data-umami-event="palette selected"
                                 className={`relative flex h-7 rounded-md overflow-hidden transition-shadow ${
                                   isActive ? "ring-2 ring-primary ring-offset-1 ring-offset-surface" : "hover:ring-1 hover:ring-border"
                                 }`}
