@@ -7,7 +7,8 @@ import Frame from "@gravity-ui/icons/Frame";
 import { Button, Input, Label, ListBox, Popover, Select, TextField, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { LOGO_FONTS } from "#/domain/logo/logo.fonts";
+import { FREE_FONTS, PREMIUM_FONTS } from "#/domain/logo/logo.fonts";
+import { useAuth } from "#/queries/auth/use-auth";
 import { updateLogo } from "#/commands/logo/update-logo";
 import { trackEvent } from "#/lib/analytics";
 import { useLogoState, useLogoActions } from "#/queries/logo/use-logo-state";
@@ -309,6 +310,9 @@ export function Dock() {
 }
 
 function TextEditorPopover({ logoText, fontFamily }: { logoText: string; fontFamily: string }) {
+  const user = useAuth();
+  const isCreator = user?.plan === "creator";
+
   return (
     <div className="flex w-56 flex-col gap-3">
       <TextField>
@@ -325,6 +329,9 @@ function TextEditorPopover({ logoText, fontFamily }: { logoText: string; fontFam
         <Select
           selectedKey={fontFamily}
           onSelectionChange={(key) => {
+            if (typeof key === "string" && key.startsWith("__")) return;
+            const font = [...FREE_FONTS, ...PREMIUM_FONTS].find((f) => f.family === key);
+            if (font?.premium && !isCreator) return;
             updateLogo((d) => { d.fontFamily = key as string; });
             trackEvent("font changed", { font: key });
           }}
@@ -338,7 +345,12 @@ function TextEditorPopover({ logoText, fontFamily }: { logoText: string; fontFam
           </Select.Trigger>
           <Select.Popover>
             <ListBox className="max-h-56 overflow-auto sleek-scroll">
-              {LOGO_FONTS.map((font) => (
+              <ListBox.Item id="__free_header" textValue="Free" className="pointer-events-none">
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-muted/50">
+                  Free
+                </span>
+              </ListBox.Item>
+              {FREE_FONTS.map((font) => (
                 <ListBox.Item key={font.family} id={font.family} textValue={font.family}>
                   <span
                     style={{ fontFamily: `'${font.family}', sans-serif`, fontWeight: font.weight }}
@@ -346,6 +358,32 @@ function TextEditorPopover({ logoText, fontFamily }: { logoText: string; fontFam
                   >
                     {font.family}
                   </span>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+              <ListBox.Item id="__premium_header" textValue="Premium" className="pointer-events-none">
+                <span className="text-[10px] font-semibold uppercase tracking-widest text-muted/50">
+                  Premium
+                </span>
+              </ListBox.Item>
+              {PREMIUM_FONTS.map((font) => (
+                <ListBox.Item
+                  key={font.family}
+                  id={font.family}
+                  textValue={font.family}
+                  className={!isCreator ? "opacity-50" : ""}
+                >
+                  <span
+                    style={{ fontFamily: `'${font.family}', sans-serif`, fontWeight: font.weight }}
+                    className="text-sm"
+                  >
+                    {font.family}
+                  </span>
+                  {!isCreator && (
+                    <span className="text-[9px] font-semibold text-primary bg-primary/10 px-1.5 py-0.5 rounded-full ml-auto">
+                      PRO
+                    </span>
+                  )}
                   <ListBox.ItemIndicator />
                 </ListBox.Item>
               ))}

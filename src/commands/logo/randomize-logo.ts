@@ -1,12 +1,12 @@
 import { ICON_SETS } from "#/domain/icon/icon.types";
-import { LOGO_FONTS } from "#/domain/logo/logo.fonts";
+import { FREE_FONTS } from "#/domain/logo/logo.fonts";
 import { getRandomLogoVisual, getSmartLogoVisual } from "#/domain/logo/logo.randomizer";
 import { fetchCollection } from "#/infra/iconify/iconify-client";
 import { useLogoStore } from "#/store/logo-store";
 import { updateLogo } from "./update-logo";
 
 function randomFont(): string {
-  return LOGO_FONTS[Math.floor(Math.random() * LOGO_FONTS.length)].family;
+  return FREE_FONTS[Math.floor(Math.random() * FREE_FONTS.length)].family;
 }
 
 function randomPrefix(): string {
