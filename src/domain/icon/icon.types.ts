@@ -7,7 +7,7 @@ export const ICON_SETS = [
   { id: "ri", label: "Remix Icons", premium: false },
   { id: "ion", label: "Ionicons", premium: false },
   { id: "material-symbols", label: "Material Design", premium: false },
-  { id: "streamline-ultimate", label: "Streamline Ultimate", premium: true },
+  { id: "streamline-ultimate-color", label: "Streamline", premium: true },
   { id: "fxemoji", label: "FX Emoji", premium: true },
   { id: "openmoji", label: "OpenMoji", premium: true },
   { id: "glyphs-poly", label: "Glyphs Poly", premium: true },

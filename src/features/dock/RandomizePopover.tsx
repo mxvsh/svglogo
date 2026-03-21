@@ -33,6 +33,7 @@ export function RandomizePopover() {
   const [randomizeFont, setRandomizeFont] = useState(true);
   const [randomizeFontColor, setRandomizeFontColor] = useState(true);
   const [selectedIconSet, setSelectedIconSet] = useState<string | null>(null);
+  const [iconPackOpen, setIconPackOpen] = useState(false);
   const isCreator = user?.plan === "creator";
   const availableIconSets = isCreator ? ICON_SETS : FREE_ICON_SETS;
 
@@ -190,7 +191,7 @@ export function RandomizePopover() {
                   <Label className="text-sm">Icon Pack</Label>
                   <p className="text-xs text-muted">Constrain icon set</p>
                 </div>
-                <Popover>
+                <Popover isOpen={iconPackOpen} onOpenChange={setIconPackOpen}>
                   <Popover.Trigger>
                     <button
                       type="button"
@@ -205,7 +206,7 @@ export function RandomizePopover() {
                       <div className="flex flex-col gap-1 w-44 max-h-52 overflow-y-auto">
                         <button
                           type="button"
-                          onClick={() => setSelectedIconSet(null)}
+                          onClick={() => { setSelectedIconSet(null); setIconPackOpen(false); }}
                           className={`flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors ${
                             !selectedIconSet ? "bg-accent/10 text-accent" : "text-muted hover:text-foreground"
                           }`}
@@ -223,6 +224,7 @@ export function RandomizePopover() {
                                 return;
                               }
                               setSelectedIconSet(s.id);
+                              setIconPackOpen(false);
                             }}
                             className={`flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors ${
                               selectedIconSet === s.id ? "bg-accent/10 text-accent" : s.premium && !isCreator ? "text-muted/50" : "text-muted hover:text-foreground"
