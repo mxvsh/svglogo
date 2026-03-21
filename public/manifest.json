@@ -1,6 +1,6 @@
 {
-  "short_name": "svglogo.dev",
-  "name": "svglogo.dev",
+  "short_name": "SVGLogo",
+  "name": "SVGLogo",
   "description": "A fast, minimal browser-based logo generator. Pick an icon, customize its color and background, and export as SVG, PNG, or ICO.",
   "icons": [
     {
@@ -19,7 +19,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "./editor",
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff"
