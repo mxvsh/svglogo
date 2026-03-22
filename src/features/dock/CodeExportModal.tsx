@@ -3,7 +3,8 @@ import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 import { type CodeFramework } from "#/domain/export/svg-to-code";
 import { generateCode, copyCode } from "#/commands/export/export-code";
-import { codeToHtml } from "shiki";
+import { createHighlighterCore } from "shiki/core";
+import { createOnigurumaEngine } from "shiki/engine/oniguruma";
 
 const FRAMEWORKS: { id: CodeFramework; label: string; icon: string; ext: string }[] = [
   { id: "react", label: "React", icon: "simple-icons:react", ext: "jsx" },
@@ -34,10 +35,19 @@ export function CodeExportModal({ isOpen, onClose }: CodeExportModalProps) {
   useEffect(() => {
     if (!code) { setHighlighted(""); return; }
     const lang = framework === "react" ? "jsx" : framework === "vue" ? "vue" : "svelte";
-    codeToHtml(code, {
-      lang,
-      theme: "github-dark-default",
-    }).then(setHighlighted);
+    const langImports = {
+      jsx: () => import("shiki/langs/jsx.mjs"),
+      vue: () => import("shiki/langs/vue.mjs"),
+      svelte: () => import("shiki/langs/svelte.mjs"),
+    } as const;
+    createHighlighterCore({
+      themes: [import("shiki/themes/github-dark-default.mjs")],
+      langs: [langImports[lang]()],
+      engine: createOnigurumaEngine(import("shiki/wasm")),
+    }).then((highlighter) => {
+      setHighlighted(highlighter.codeToHtml(code, { lang, theme: "github-dark-default" }));
+      highlighter.dispose();
+    });
   }, [code, framework]);
 
   const handleCopy = async () => {
