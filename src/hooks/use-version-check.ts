@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { getVersionFn } from "#/server/version";
 
 declare const __BUILD_HASH__: string;
 
@@ -11,7 +10,8 @@ export function useVersionCheck() {
 		const check = async () => {
 			if (checked.current) return;
 			try {
-				const { hash } = await getVersionFn();
+				const res = await fetch(`/version.json?t=${Date.now()}`);
+				const { hash } = await res.json();
 				if (hash !== __BUILD_HASH__) {
 					checked.current = true;
 					setUpdateAvailable(true);

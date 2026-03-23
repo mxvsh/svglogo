@@ -26,5 +26,8 @@ npm-debug.log*
 .wrangler
 .dev.vars
 
+# generated
+public/version.json
+
 # supabase
 supabase/.temp
