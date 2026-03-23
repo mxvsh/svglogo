@@ -10,6 +10,7 @@ import { removeFromCollection } from "#/commands/collection/remove-from-collecti
 import { useCollections } from "#/queries/collection/use-collections";
 import { useLogoState, useLogoActions } from "#/queries/logo/use-logo-state";
 import { useLogoStore } from "#/store/logo-store";
+import { useVersionCheck } from "#/hooks/use-version-check";
 import { useKbShortcut } from "#/hooks/use-kb-shortcut";
 import { AnimatePresence } from "framer-motion";
 import { GridBackground } from "./GridBackground";
@@ -106,7 +107,7 @@ export function EditorPage() {
   return (
     <div className="relative flex h-dvh w-screen items-center justify-center overflow-hidden pb-16 md:pb-0">
       <GridBackground />
-      <FreeBanner />
+      <TopBanner />
       <AnimatePresence mode="wait">
         {infiniteMode ? (
           <InfiniteCanvas key="infinite" />
@@ -130,8 +131,29 @@ export function EditorPage() {
   );
 }
 
-function FreeBanner() {
+function TopBanner() {
   const [modalOpen, setModalOpen] = useState(false);
+  const updateAvailable = useVersionCheck();
+
+  if (updateAvailable) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute top-4 left-1/2 -translate-x-1/2 z-30 hidden md:block"
+      >
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+          className="cursor-pointer rounded-lg bg-warning/10 border border-warning/20 px-4 py-2 text-xs font-medium text-warning backdrop-blur-sm hover:bg-warning/15 transition-colors flex items-center gap-2"
+        >
+          <Icon icon="lucide:refresh-cw" width={12} />
+          New version available — click to refresh
+        </button>
+      </motion.div>
+    );
+  }
 
   return (
     <>

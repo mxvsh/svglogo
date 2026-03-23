@@ -13,7 +13,6 @@ import { FABs } from "./FABs";
 import { MobileTopBar } from "./MobileTopBar";
 import { WelcomeOnboarding } from "#/features/onboarding/WelcomeOnboarding";
 import { OnboardingTour } from "./OnboardingTour";
-import { useVersionCheck } from "#/hooks/use-version-check";
 
 export function AppShell({
   sharedLogo,
@@ -22,7 +21,6 @@ export function AppShell({
   sharedLogo?: LogoState | null;
   user?: AuthUser | null;
 }) {
-  useVersionCheck();
   const initialized = useRef(false);
 
   useEffect(() => {

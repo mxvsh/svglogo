@@ -1,35 +1,35 @@
-import { useEffect, useRef } from "react";
-import { toast } from "@heroui/react";
+import { useEffect, useRef, useState } from "react";
 import { getVersionFn } from "#/server/version";
 
 declare const __BUILD_HASH__: string;
 
 export function useVersionCheck() {
-	const toasted = useRef(false);
+	const [updateAvailable, setUpdateAvailable] = useState(false);
+	const checked = useRef(false);
 
 	useEffect(() => {
 		const check = async () => {
-			if (toasted.current) return;
+			if (checked.current) return;
 			try {
 				const { hash } = await getVersionFn();
 				if (hash !== __BUILD_HASH__) {
-					toasted.current = true;
-					toast("A new version is available — refresh to update.", {
-						timeout: 0
-					});
+					checked.current = true;
+					setUpdateAvailable(true);
 				}
 			} catch {
 				// ignore network errors
 			}
 		};
 
-		const onFocus = () => void check();
-		document.addEventListener("visibilitychange", () => {
-			if (document.visibilityState === "visible") onFocus();
-		});
+		const onVisibility = () => {
+			if (document.visibilityState === "visible") void check();
+		};
+		document.addEventListener("visibilitychange", onVisibility);
 
 		return () => {
-			document.removeEventListener("visibilitychange", onFocus);
+			document.removeEventListener("visibilitychange", onVisibility);
 		};
 	}, []);
+
+	return updateAvailable;
 }
