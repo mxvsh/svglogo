@@ -30,10 +30,7 @@ export function MobileTopBar() {
       </button>
       <div className="flex items-center gap-2">
         <a href="/creator" target="_blank" rel="noopener noreferrer">
-          <Button size="sm" variant="ghost" onPress={() => trackEvent("creator card cta click")}>
-              <CrownDiamond />
-              Creator Plan
-          </Button>
+
         </a>
         <Dropdown>
           <Button size="sm" variant="primary" aria-label="Export">
