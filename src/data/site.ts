@@ -7,7 +7,7 @@ export const SEO = {
     'Free SVG logo maker to create professional icons and brand marks in seconds. Customize icons, colors, and backgrounds. Export high-quality SVG, PNG, and ICO from your browser.',
   keywords:
     'svg logo maker, svg logo generator, free logo maker, logo svg generator, svg logo creator, free svg logo, icon logo maker, logo maker online, svg to png, svg to ico, favicon generator, brand mark creator',
-  ogImage: `${SITE_URL}/og/creator.png`,
+  ogImage: `${SITE_URL}/screenshot.png`,
   ogImageAlt: 'svglogo.dev app preview banner',
   canonical: `${SITE_URL}/`,
 } as const
