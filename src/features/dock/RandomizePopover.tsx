@@ -2,7 +2,7 @@ import { Button, Label, Popover, Switch, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { Check } from "@gravity-ui/icons";
 import { motion } from "framer-motion";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import palettes from "nice-color-palettes/200.json";
 import { randomizeLogo } from "#/commands/logo/randomize-logo";
 import { trackEvent } from "#/lib/analytics";
@@ -30,6 +30,23 @@ export function RandomizePopover() {
 
   const usePalette = !!selectedPalette;
   const nothingSelected = custom && !randomizeBackground && (textMode ? (!randomizeFont && !randomizeFontColor) : (!randomizeIcon && !randomizeIconColor));
+
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const canOpenMobilePopover = useRef(false);
+
+  const handlePressStart = () => {
+    canOpenMobilePopover.current = false;
+    longPressTimer.current = setTimeout(() => {
+      longPressTimer.current = null;
+      canOpenMobilePopover.current = true;
+      setIsOpen(true);
+    }, 500);
+  };
 
   const lastRun = useRef(0);
 
@@ -72,7 +89,36 @@ export function RandomizePopover() {
       transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="flex items-center rounded-2xl border border-border bg-surface/90 px-2 py-2 shadow-xl backdrop-blur-xl"
     >
-      <Popover isOpen={isOpen} onOpenChange={setIsOpen}>
+      <Popover
+        isOpen={isOpen}
+        onOpenChange={(open) => {
+          if (!open || !isMobile || canOpenMobilePopover.current) setIsOpen(open);
+        }}
+      >
+        {isMobile ? (
+          <Button
+            isIconOnly
+            variant="ghost"
+            aria-label="Randomize"
+            data-tour="randomize-button"
+            onPressStart={handlePressStart}
+            onPress={() => {
+              if (longPressTimer.current) {
+                clearTimeout(longPressTimer.current);
+                longPressTimer.current = null;
+                runRandomize();
+              }
+            }}
+          >
+            <motion.span
+              animate={{ rotate: diceRotation }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              style={{ display: "inline-flex" }}
+            >
+              <Icon icon="lucide:dice-5" width={16} height={16} />
+            </motion.span>
+          </Button>
+        ) : (
         <Tooltip>
           <Tooltip.Trigger tabIndex={-1}>
             <Popover.Trigger tabIndex={-1}>
@@ -96,6 +142,7 @@ export function RandomizePopover() {
             <p className="text-xs">Randomize</p>
           </Tooltip.Content>
         </Tooltip>
+        )}
 
         <Popover.Content placement="top">
           <Popover.Dialog>
