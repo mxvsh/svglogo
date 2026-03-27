@@ -6,9 +6,10 @@ import { useEffect } from 'react'
 export function HeroSection() {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'e' && !e.metaKey && !e.ctrlKey && !e.altKey && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
-        window.location.href = '/editor';
-      }
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === 'e') window.location.href = '/editor';
+      if (e.key === 'g') window.open('https://github.com/mxvsh/svglogo', '_blank');
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -76,6 +77,7 @@ export function HeroSection() {
             <Button size="lg" variant="ghost" className="text-muted gap-2">
               <Icon icon="simple-icons:github" width={16} />
               View Source Code
+              <kbd className="hidden sm:inline-flex items-center justify-center rounded border border-border bg-muted/20 px-1.5 text-[11px] font-sans leading-none h-5">G</kbd>
             </Button>
           </a>
         </motion.div>
