@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import ArrowRotateLeft from "@gravity-ui/icons/ArrowRotateLeft";
 import ArrowRotateRight from "@gravity-ui/icons/ArrowRotateRight";
 import ArrowsExpand from "@gravity-ui/icons/ArrowsExpand";
@@ -28,9 +29,7 @@ export function Dock() {
 
   return (
     <div className="fixed bottom-3 left-1/2 z-50 -translate-x-1/2 max-w-[calc(100vw-1.5rem)] md:bottom-4 md:max-w-none">
-      <p className="mb-2 text-center text-[10px] text-muted/40 md:hidden">
-        Visit on desktop for the full experience
-      </p>
+      <MobileTip />
       <div className="relative">
         <div className="hidden md:block absolute right-full top-1/2 mr-2 -translate-y-1/2">
           <RandomizePopover />
@@ -304,6 +303,37 @@ export function Dock() {
           </div>
         </motion.div>
       </div>
+    </div>
+  );
+}
+
+const MOBILE_TIPS = [
+  "Visit on desktop for the full experience",
+  "Long press randomize for more options",
+];
+
+function MobileTip() {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setIndex((i) => (i + 1) % MOBILE_TIPS.length), 4000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="mb-2 h-3 md:hidden overflow-hidden">
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.p
+          key={index}
+          initial={{ y: 8, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -8, opacity: 0 }}
+          transition={{ duration: 0.25 }}
+          className="text-center text-[10px] text-muted/40"
+        >
+          {MOBILE_TIPS[index]}
+        </motion.p>
+      </AnimatePresence>
     </div>
   );
 }
