@@ -14,6 +14,8 @@ export const ICON_SETS = [
 ] as const;
 
 export const FREE_ICON_SETS = ICON_SETS.filter((s) => !s.premium);
+
+export const RANDOMIZE_ICON_SET_IDS = ["lucide", "tabler", "hugeicons", "heroicons", "ri"] as const;
 export const PREMIUM_ICON_SETS = ICON_SETS.filter((s) => s.premium);
 
 export type IconSvgCache = {

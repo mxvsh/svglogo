@@ -1,4 +1,4 @@
-import { ICON_SETS } from "#/domain/icon/icon.types";
+import { RANDOMIZE_ICON_SET_IDS } from "#/domain/icon/icon.types";
 import { FREE_FONTS } from "#/domain/logo/logo.fonts";
 import { getRandomLogoVisual, getSmartLogoVisual } from "#/domain/logo/logo.randomizer";
 import { fetchCollection } from "#/infra/iconify/iconify-client";
@@ -10,7 +10,7 @@ function randomFont(): string {
 }
 
 function randomPrefix(): string {
-  return ICON_SETS[Math.floor(Math.random() * ICON_SETS.length)].id;
+  return RANDOMIZE_ICON_SET_IDS[Math.floor(Math.random() * RANDOMIZE_ICON_SET_IDS.length)];
 }
 
 const iconCollectionCache = new Map<string, string[]>();
