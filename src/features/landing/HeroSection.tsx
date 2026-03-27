@@ -1,8 +1,19 @@
 import { Icon } from '@iconify/react'
 import { Button } from '@heroui/react'
 import { motion } from 'framer-motion'
+import { useEffect } from 'react'
 
 export function HeroSection() {
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'e' && !e.metaKey && !e.ctrlKey && !e.altKey && !(e.target instanceof HTMLInputElement) && !(e.target instanceof HTMLTextAreaElement)) {
+        window.location.href = '/editor';
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
+
   return (
     <section className="relative flex flex-col items-center justify-center min-h-[88vh] px-4 pt-24 pb-0 text-center">
       <motion.div
@@ -54,10 +65,10 @@ export function HeroSection() {
           <a href="/editor">
             <Button
               size="lg"
-              color="primary"
               className="font-semibold px-8 gap-2"
             >
-              Open Web Editor
+              Open Editor
+              <kbd className="hidden sm:inline-flex items-center justify-center rounded border border-white/20 bg-white/10 px-1.5 text-[11px] font-sans leading-none h-5">E</kbd>
               <Icon icon="lucide:arrow-right" width={16} />
             </Button>
           </a>
