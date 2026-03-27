@@ -5,6 +5,13 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "Mar 27, 2026",
+    changes: [
+      "Randomize uses curated icon sets",
+      "Mobile: tap to randomize, long press for options"
+    ],
+  },
+  {
     date: "Mar 21, 2026",
     changes: [
       "Added Infinite Mode",
