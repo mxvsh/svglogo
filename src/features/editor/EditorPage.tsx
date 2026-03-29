@@ -32,10 +32,10 @@ export function EditorPage() {
   useKbShortcut("l", () => {
     const matchedLogo = collections.find((c) => areLogosEqual(c, present));
     if (matchedLogo) {
-      removeFromCollection(matchedLogo.id);
+      void removeFromCollection(matchedLogo.id);
       toast("Removed from collection");
     } else {
-      saveToCollection();
+      void saveToCollection();
       toast("Added to collection");
     }
   });

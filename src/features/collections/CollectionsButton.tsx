@@ -91,7 +91,7 @@ export function CollectionsButton() {
                         variant="ghost"
                         className="opacity-0 group-hover:opacity-100 transition-opacity min-w-6 w-6 h-6 p-0 flex items-center justify-center ml-2"
                         onPress={() => {
-                          removeFromCollection(logo.id);
+                          void removeFromCollection(logo.id);
                         }}
                       >
                         <Icon icon="lucide:x" width={12} height={12} />

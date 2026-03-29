@@ -21,9 +21,9 @@ export function HistoryButton() {
 
   const handleSave = () => {
     if (isLiked) {
-      removeFromCollection(matchedLogo.id);
+      void removeFromCollection(matchedLogo.id);
     } else {
-      saveToCollection();
+      void saveToCollection();
       setIsAnimating(true);
       setTimeout(() => setIsAnimating(false), 600);
     }
