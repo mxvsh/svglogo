@@ -2,6 +2,7 @@ export type GradientStop = { color: string; position: number };
 
 export type Background =
   | { type: "solid"; color: string }
+  | { type: "transparent" }
   | {
       type: "gradient";
       direction: number;

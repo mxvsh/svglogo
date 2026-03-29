@@ -3,12 +3,16 @@ import { getFontByFamily } from "./logo.fonts";
 import type { Background, LogoState } from "./logo.types";
 
 export function buildBackgroundStyle(bg: Background): string {
+	if (bg.type === "transparent") return "transparent";
 	if (bg.type === "solid") return bg.color;
 	const { direction, stops } = bg;
-	return `linear-gradient(${direction}deg, ${stops.map((s) => `${s.color} ${s.position}%`).join(", ")})`;
+	return `linear-gradient(${direction}deg, ${stops.map((s: { color: string; position: number }) => `${s.color} ${s.position}%`).join(", ")})`;
 }
 
 export function buildBackgroundCss(bg: Background): React.CSSProperties {
+	if (bg.type === "transparent") {
+		return { background: "transparent" };
+	}
 	if (bg.type === "solid") {
 		return { background: bg.color };
 	}
@@ -150,7 +154,9 @@ export function buildCanvasSvgSync(
 
 	let bgDef = "";
 	let bgFill = "";
-	if (background.type === "solid") {
+	if (background.type === "transparent") {
+		bgFill = "none";
+	} else if (background.type === "solid") {
 		bgFill = background.color;
 	} else {
 		const { direction, stops } = background;

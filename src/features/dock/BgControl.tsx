@@ -7,7 +7,16 @@ import { InlineColorPicker } from "./InlineColorPicker";
 export function BgControl() {
   const { background } = useLogoState();
   const { set } = useLogoActions();
+  const isTransparent = background.type === "transparent";
   const isGradient = background.type === "gradient";
+
+  const toggleTransparent = (on: boolean) => {
+    if (on) {
+      set((d) => { d.background = { type: "transparent" }; });
+    } else {
+      set((d) => { d.background = { type: "solid", color: "#6366f1" }; });
+    }
+  };
 
   const toggleGradient = (on: boolean) => {
     if (on) {
@@ -16,28 +25,31 @@ export function BgControl() {
           type: "gradient",
           direction: 135,
           stops: [
-            {
-              color: background.type === "solid" ? background.color : "#6366f1",
-              position: 0,
-            },
+            { color: background.type === "solid" ? background.color : "#6366f1", position: 0 },
             { color: "#a855f7", position: 100 },
           ],
         };
       });
     } else {
-      const color =
-        background.type === "gradient" ? background.stops[0].color : "#6366f1";
-      set((d) => {
-        d.background = { type: "solid", color };
-      });
+      const color = background.type === "gradient" ? background.stops[0].color : "#6366f1";
+      set((d) => { d.background = { type: "solid", color }; });
     }
   };
 
   return (
     <div className={`flex flex-col gap-4 transition-all ${isGradient ? "w-72" : "w-52"}`}>
       <div className="flex items-center justify-between">
-        <Label className="text-sm text-muted">Gradient</Label>
-        <Switch isSelected={isGradient} onChange={toggleGradient}>
+        <Label className="text-sm text-muted">Transparent</Label>
+        <Switch isSelected={isTransparent} onChange={toggleTransparent}>
+          <Switch.Control>
+            <Switch.Thumb />
+          </Switch.Control>
+        </Switch>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <Label className={`text-sm ${isTransparent ? "text-muted/40" : "text-muted"}`}>Gradient</Label>
+        <Switch isSelected={isGradient} isDisabled={isTransparent} onChange={toggleGradient}>
           <Switch.Control>
             <Switch.Thumb />
           </Switch.Control>

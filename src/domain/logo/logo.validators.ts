@@ -18,6 +18,10 @@ export function sanitizeBackground(value: unknown): Background {
   if (!value || typeof value !== "object") return DEFAULT_LOGO.background;
   const bg = value as Record<string, unknown>;
 
+  if (bg.type === "transparent") {
+    return { type: "transparent" };
+  }
+
   if (bg.type === "solid") {
     return {
       type: "solid",
@@ -105,6 +109,7 @@ export function areLogosEqual(a: LogoState, b: LogoState) {
   if (a.fontFamily !== b.fontFamily) return false;
 
   if (a.background.type !== b.background.type) return false;
+  if (a.background.type === "transparent") return true;
   if (a.background.type === "solid" && b.background.type === "solid") {
     return a.background.color === b.background.color;
   }
@@ -113,8 +118,8 @@ export function areLogosEqual(a: LogoState, b: LogoState) {
     if (a.background.stops.length !== b.background.stops.length) return false;
     return a.background.stops.every(
       (s, i) =>
-        s.color === b.background.stops[i].color &&
-        s.position === b.background.stops[i].position,
+        s.color === (b.background as Extract<typeof b.background, { type: "gradient" }>).stops[i].color &&
+        s.position === (b.background as Extract<typeof b.background, { type: "gradient" }>).stops[i].position,
     );
   }
   return false;
