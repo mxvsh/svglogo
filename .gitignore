@@ -34,3 +34,6 @@ supabase/.temp
 
 # claude
 .claude/settings.local.json
+
+# cf
+worker-configuration.d.ts
