@@ -1,4 +1,5 @@
 import { Button, Form, Input, Label, Meter, Modal, TextField, toast } from "@heroui/react";
+import confetti from "canvas-confetti";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
@@ -20,13 +21,6 @@ const ROLE_LABELS: Record<UserRole, { label: string; icon: string }> = {
   student: { label: "Student", icon: "lucide:graduation-cap" },
   other: { label: "Other", icon: "lucide:user" },
 };
-
-const FEATURES = [
-  { icon: "lucide:cloud", label: "Cloud sync", desc: "Logos saved to your account" },
-  { icon: "lucide:monitor-smartphone", label: "Any device", desc: "Access from anywhere" },
-  { icon: "lucide:history", label: "History", desc: "Full undo history preserved" },
-  { icon: "lucide:download", label: "Export", desc: "SVG, PNG and ICO formats" },
-];
 
 type Step = "welcome" | "profile" | "role" | "sync";
 const STEPS: Step[] = ["welcome", "profile", "role", "sync"];
@@ -71,6 +65,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
 
     await refetch();
+    void confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
     setLoading(false);
   }
 
@@ -106,26 +101,20 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                   {/* Step 1 — Welcome */}
                   {step === "welcome" && (
                     <>
-                      <div className="flex items-center gap-3">
-                        <img src="/logo512.png" alt="SVGLogo" className="h-10 w-10 rounded-xl" />
-                        <div>
-                          <h2 className="text-lg font-bold">Welcome to SVGLogo</h2>
-                          <p className="text-sm text-muted">Free, beautiful logos in seconds.</p>
+                      <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+                        <img src="/logo512.png" alt="SVGLogo" className="h-16 w-16 rounded-2xl shadow-lg" />
+                        <div className="flex flex-col gap-1">
+                          <h2 className="text-xl font-bold">Welcome to SVGLogo</h2>
+                          <p className="text-sm text-muted">Create and sync beautiful logos, free forever.</p>
                         </div>
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        {FEATURES.map((f) => (
-                          <div key={f.icon} className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
-                              <Icon icon={f.icon} width={15} className="text-primary" />
-                            </div>
-                            <div>
-                              <p className="text-sm font-medium">{f.label}</p>
-                              <p className="text-xs text-muted">{f.desc}</p>
-                            </div>
+                        {collections.length > 0 && (
+                          <div className="flex items-center gap-2 rounded-full border border-border bg-default/40 px-4 py-2 text-xs text-muted">
+                            <Icon icon="lucide:layers" width={13} className="text-primary" />
+                            <span>
+                              <span className="font-semibold text-foreground">{collections.length}</span> local logo{collections.length !== 1 ? "s" : ""} ready to sync
+                            </span>
                           </div>
-                        ))}
+                        )}
                       </div>
 
                       <Button variant="primary" className="w-full" onPress={() => goTo("profile")}>
