@@ -5,6 +5,15 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "Mar 29, 2026",
+    changes: [
+      "Sign up & sign in with email or OAuth",
+      "Cloud sync — collections saved to your account",
+      "Transparent background support",
+      "Improved background gradients"
+    ],
+  },
+  {
     date: "Mar 27, 2026",
     changes: [
       "Randomize uses curated icon sets",
@@ -23,7 +32,6 @@ export const CHANGELOG: ChangelogEntry[] = [
   {
     date: "Mar 20, 2026",
     changes: [
-      "Introduced Creator Plan",
       "Added stats info button",
       "Improved mobile experience",
       "Text mode improvements"
