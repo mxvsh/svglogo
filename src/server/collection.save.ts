@@ -6,8 +6,7 @@ import { drizzle } from "drizzle-orm/d1";
 import { auth } from "#/lib/auth";
 import { collection } from "../../drizzle/schema";
 import type { LogoState } from "#/domain/logo/logo.types";
-
-const COLLECTION_LIMIT = 99;
+import { COLLECTION_LIMIT } from "#/data/limits";
 
 export const saveCollectionFn = createServerFn({ method: "POST" })
   .inputValidator((d: { id: string; logo: LogoState }) => d)

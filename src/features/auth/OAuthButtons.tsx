@@ -3,7 +3,8 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { authClient } from "#/lib/auth-client";
 
-export function OAuthButtons() {
+// OAuth redirects away — sync happens via usePostLoginSync in AppShell
+export function OAuthButtons({ onSignedIn: _ }: { onSignedIn?: () => Promise<void> }) {
   const [loading, setLoading] = useState<string | null>(null);
 
   async function handleOAuth(provider: "google" | "github") {

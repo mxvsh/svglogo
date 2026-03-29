@@ -8,6 +8,8 @@ interface CollectionStoreState {
   saveLogo: (logo: LogoState, id?: string) => string;
   removeLogo: (id: string) => void;
   clearCollections: () => void;
+  loadCollections: (items: CollectionItem[]) => void;
+  mergeCollections: (items: CollectionItem[]) => void;
 }
 
 export const useCollectionStore = create<CollectionStoreState>()(
@@ -29,6 +31,17 @@ export const useCollectionStore = create<CollectionStoreState>()(
           collections: state.collections.filter((l) => l.id !== id),
         })),
       clearCollections: () => set({ collections: [] }),
+      loadCollections: (items) => set({ collections: items }),
+      mergeCollections: (items) =>
+        set((state) => {
+          const existingIds = new Set(state.collections.map((c) => c.id));
+          const newItems = items.filter((c) => !existingIds.has(c.id));
+          return {
+            collections: [...state.collections, ...newItems]
+              .sort((a, b) => b.savedAt - a.savedAt)
+              .slice(0, 99),
+          };
+        }),
     }),
     {
       name: "svglogo-collections",

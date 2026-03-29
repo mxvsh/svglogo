@@ -8,7 +8,9 @@ import { PreviewButton } from "#/features/preview/PreviewButton";
 import { ShareButton } from "#/features/share/ShareButton";
 import { UserButton } from "#/features/auth/UserButton";
 import { OnboardingModal } from "#/features/auth/OnboardingModal";
+import { CollectionSyncModal } from "#/features/auth/CollectionSyncModal";
 import { useSession } from "#/queries/auth/use-session";
+import { usePostLoginSync } from "#/hooks/use-post-login-sync";
 import { EditorPage } from "./EditorPage";
 import { FABs } from "./FABs";
 import { MobileTopBar } from "./MobileTopBar";
@@ -63,6 +65,7 @@ export function AppShell({
   const infiniteMode = useInfiniteStore((s) => s.enabled);
   const { data: session } = useSession();
   const showOnboarding = !!session && !session.user.onboardingCompleted;
+  const { syncData, clearSyncData } = usePostLoginSync();
 
   return (
     <div className="block">
@@ -104,6 +107,13 @@ export function AppShell({
       </AnimatePresence>
       <OnboardingTour />
       <OnboardingModal isOpen={showOnboarding} onClose={() => {}} />
+      <CollectionSyncModal
+        isOpen={!!syncData}
+        cloudCount={syncData?.cloud.length ?? 0}
+        localCount={syncData?.local.length ?? 0}
+        cloudCollections={syncData?.cloud ?? []}
+        onClose={clearSyncData}
+      />
       <EditorPage />
     </div>
   );

@@ -25,7 +25,7 @@ export function CollectionsButton() {
             Collections
           </Button>
         </Popover.Trigger>
-        <Popover.Content className="p-1">
+        <Popover.Content className="p-1 max-h-[min(80dvh,400px)] overflow-hidden">
           <Popover.Dialog className="p-0">
             {collections.length === 0 ? (
               <div className="p-4 text-sm text-muted-foreground text-center w-55">

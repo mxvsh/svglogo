@@ -2,7 +2,7 @@ import { Button, FieldError, Form, Input, Label, TextField } from "@heroui/react
 import { useState } from "react";
 import { authClient } from "#/lib/auth-client";
 
-export function SignInTab({ onClose }: { onClose: () => void }) {
+export function SignInTab({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,8 +23,8 @@ export function SignInTab({ onClose }: { onClose: () => void }) {
       return;
     }
 
+    await onSignedIn();
     setLoading(false);
-    onClose();
   }
 
   return (
