@@ -1,4 +1,4 @@
-import { Button, Form, Input, Label, Meter, Modal, TextField, toast } from "@heroui/react";
+import { Button, Form, Input, Label, Meter, Modal, Switch, TextField, toast } from "@heroui/react";
 import confetti from "canvas-confetti";
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -229,24 +229,20 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                             </div>
                           </div>
 
-                          <button
-                            type="button"
-                            onClick={() => setSyncCollections((v) => !v)}
-                            className={`flex items-center gap-3 rounded-xl border-2 px-4 py-3 text-left text-sm transition-colors ${
-                              syncCollections
-                                ? "border-accent bg-accent/10 text-accent"
-                                : "border-border bg-transparent text-muted"
-                            }`}
-                          >
-                            <Icon
-                              icon={syncCollections ? "lucide:check-circle" : "lucide:circle"}
-                              width={18}
-                              className="shrink-0"
-                            />
-                            <span>
-                              Sync {collections.length} logo{collections.length !== 1 ? "s" : ""} to my account
-                            </span>
-                          </button>
+                          <div className="flex items-center justify-between rounded-xl border border-border bg-default/30 px-4 py-3">
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10">
+                                <Icon icon="lucide:cloud-upload" width={18} className="text-primary" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium">Sync to my account</p>
+                                <p className="text-xs text-muted">{collections.length} logo{collections.length !== 1 ? "s" : ""} will be uploaded</p>
+                              </div>
+                            </div>
+                            <Switch isSelected={syncCollections} onChange={setSyncCollections}>
+                              <Switch.Control><Switch.Thumb /></Switch.Control>
+                            </Switch>
+                          </div>
                         </div>
                       )}
 
