@@ -52,7 +52,9 @@ export function CollectionsButton() {
                           background:
                             logo.background.type === "solid"
                               ? logo.background.color
-                              : `linear-gradient(${logo.background.direction}deg, ${logo.background.stops[0].color}, ${logo.background.stops[1].color})`,
+                              : logo.background.type === "gradient"
+                              ? `linear-gradient(${logo.background.direction}deg, ${logo.background.stops[0].color}, ${logo.background.stops[1].color})`
+                              : "transparent",
                         }}
                       >
                         {logo.textMode && logo.logoText ? (
