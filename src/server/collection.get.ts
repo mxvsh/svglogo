@@ -6,7 +6,9 @@ import { collections } from "../../drizzle/schema";
 
 export const getCollectionsFn = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  // getSession() decodes the JWT locally (no network call) — acceptable for read-only data fetching
+  const { data: { session } } = await supabase.auth.getSession();
+  const user = session?.user;
   if (!user) return [];
 
   const db = getDb();

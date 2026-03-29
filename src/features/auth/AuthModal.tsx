@@ -26,9 +26,13 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   async function handleSignedIn() {
     await queryClient.invalidateQueries({ queryKey: ["session"] });
     const session = await queryClient.fetchQuery({ queryKey: ["session"] });
+    const userId = (session as { user?: { id?: string; onboardingCompleted?: boolean } } | null)?.user?.id ?? null;
     const onboardingCompleted = (session as { user?: { onboardingCompleted?: boolean } } | null)?.user?.onboardingCompleted ?? false;
     onClose();
-    if (!onboardingCompleted) return;
+    if (!onboardingCompleted || !userId) return;
+
+    // Mark as synced so usePostLoginSync doesn't run a duplicate fetch
+    sessionStorage.setItem("svglogo-synced-user", userId);
 
     const cloud = await getCollectionsFn() as CollectionItem[];
     if (cloud.length === 0) return;
@@ -99,6 +103,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         cloudCount={cloudCollections.length}
         localCount={localCollections.length}
         cloudCollections={cloudCollections}
+        localCollections={localCollections}
         onClose={() => setSyncModal(false)}
       />
     </>

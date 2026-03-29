@@ -112,6 +112,7 @@ export function AppShell({
         cloudCount={syncData?.cloud.length ?? 0}
         localCount={syncData?.local.length ?? 0}
         cloudCollections={syncData?.cloud ?? []}
+        localCollections={syncData?.local ?? []}
         onClose={clearSyncData}
       />
       <EditorPage />

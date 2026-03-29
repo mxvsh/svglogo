@@ -2,12 +2,14 @@ import { Button, Modal } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import type { CollectionItem } from "#/domain/collection/collection.types";
 import { useCollectionStore } from "#/store/collection-store";
+import { saveCollectionFn } from "#/server/collection.save";
 
 interface CollectionSyncModalProps {
   isOpen: boolean;
   cloudCount: number;
   localCount: number;
   cloudCollections: CollectionItem[];
+  localCollections: CollectionItem[];
   onClose: () => void;
 }
 
@@ -16,6 +18,7 @@ export function CollectionSyncModal({
   cloudCount,
   localCount,
   cloudCollections,
+  localCollections,
   onClose,
 }: CollectionSyncModalProps) {
   const { loadCollections, mergeCollections } = useCollectionStore();
@@ -27,6 +30,13 @@ export function CollectionSyncModal({
 
   function handleMerge() {
     mergeCollections(cloudCollections);
+    // Upload local-only items to cloud
+    const cloudIds = new Set(cloudCollections.map((c) => c.id));
+    for (const item of localCollections) {
+      if (!cloudIds.has(item.id)) {
+        void saveCollectionFn({ data: { id: item.id, logo: item } });
+      }
+    }
     onClose();
   }
 

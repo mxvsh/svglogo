@@ -37,6 +37,7 @@ export function UserButton() {
   const initials = getInitials(user.name, user.email);
 
   async function handleSignOut() {
+    sessionStorage.removeItem("svglogo-synced-user");
     await signoutFn();
     await queryClient.invalidateQueries({ queryKey: ["session"] });
   }
