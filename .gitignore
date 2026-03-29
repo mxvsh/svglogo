@@ -31,3 +31,6 @@ public/version.json
 
 # supabase
 supabase/.temp
+
+# claude
+.claude/settings.local.json
