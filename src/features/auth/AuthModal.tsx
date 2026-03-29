@@ -1,5 +1,7 @@
 import { Modal } from "@heroui/react";
+import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useCollectionStore } from "#/store/collection-store";
 import { getCollectionsFn } from "#/server/collection.get";
 import type { CollectionItem } from "#/domain/collection/collection.types";
@@ -14,6 +16,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
+  const queryClient = useQueryClient();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [signedUp, setSignedUp] = useState(false);
   const [syncModal, setSyncModal] = useState(false);
@@ -21,11 +24,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const localCollections = useCollectionStore((s) => s.collections);
 
   async function handleSignedIn() {
-    // If onboarding is pending, the onboarding modal handles sync on the last step
-    const session = await import("#/lib/auth-client").then((m) => m.authClient.getSession());
-    const onboardingCompleted = session.data?.user.onboardingCompleted ?? false;
+    await queryClient.invalidateQueries({ queryKey: ["session"] });
+    const session = await queryClient.fetchQuery({ queryKey: ["session"] });
+    const onboardingCompleted = (session as { user?: { onboardingCompleted?: boolean } } | null)?.user?.onboardingCompleted ?? false;
     onClose();
-
     if (!onboardingCompleted) return;
 
     const cloud = await getCollectionsFn() as CollectionItem[];
@@ -51,9 +53,19 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <img src="/logo512.png" alt="SVGLogo" className="w-16 h-16 rounded-xl" />
               </Modal.Header>
               <Modal.Body className="p-4">
-                {mode === "signin"
-                  ? <SignInTab onSignedIn={handleSignedIn} />
-                  : <SignUpTab onSuccess={() => setSignedUp(true)} />}
+                {signedUp ? (
+                  <div className="flex flex-col items-center gap-3 py-8 text-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
+                      <Icon icon="lucide:mail-check" width={22} className="text-accent" />
+                    </div>
+                    <p className="text-sm font-medium">Check your email</p>
+                    <p className="text-xs text-muted">We sent a confirmation link to your inbox.</p>
+                  </div>
+                ) : mode === "signin" ? (
+                  <SignInTab onSignedIn={handleSignedIn} />
+                ) : (
+                  <SignUpTab onSuccess={() => setSignedUp(true)} />
+                )}
                 {!signedUp && (
                   <>
                     <OAuthButtons onSignedIn={handleSignedIn} />

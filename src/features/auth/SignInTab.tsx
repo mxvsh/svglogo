@@ -1,6 +1,6 @@
 import { Button, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { useState } from "react";
-import { authClient } from "#/lib/auth-client";
+import { loginFn } from "#/server/auth";
 
 export function SignInTab({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
   const [error, setError] = useState("");
@@ -12,13 +12,12 @@ export function SignInTab({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
     setLoading(true);
 
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    const { error: err } = await authClient.signIn.email({
-      email: data.email as string,
-      password: data.password as string,
+    const result = await loginFn({
+      data: { email: data.email as string, password: data.password as string },
     });
 
-    if (err) {
-      setError(err.message ?? "Sign in failed");
+    if (result?.error) {
+      setError(result.message ?? "Sign in failed");
       setLoading(false);
       return;
     }

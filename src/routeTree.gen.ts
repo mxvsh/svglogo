@@ -15,7 +15,7 @@ import { Route as EditorRouteImport } from './routes/editor'
 import { Route as CreatorRouteImport } from './routes/creator'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as AuthCallbackRouteImport } from './routes/auth/callback'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -47,9 +47,9 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -60,7 +60,7 @@ export interface FileRoutesByFullPath {
   '/editor': typeof EditorRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -69,7 +69,7 @@ export interface FileRoutesByTo {
   '/editor': typeof EditorRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -79,7 +79,7 @@ export interface FileRoutesById {
   '/editor': typeof EditorRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
-  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,7 +90,7 @@ export interface FileRouteTypes {
     | '/editor'
     | '/privacy'
     | '/terms'
-    | '/api/auth/$'
+    | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -99,7 +99,7 @@ export interface FileRouteTypes {
     | '/editor'
     | '/privacy'
     | '/terms'
-    | '/api/auth/$'
+    | '/auth/callback'
   id:
     | '__root__'
     | '/'
@@ -108,7 +108,7 @@ export interface FileRouteTypes {
     | '/editor'
     | '/privacy'
     | '/terms'
-    | '/api/auth/$'
+    | '/auth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,7 +118,7 @@ export interface RootRouteChildren {
   EditorRoute: typeof EditorRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
-  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -165,11 +165,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -182,7 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   EditorRoute: EditorRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
-  ApiAuthSplatRoute: ApiAuthSplatRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,7 +1,7 @@
 import { Button, Separator } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { authClient } from "#/lib/auth-client";
+import { oauthFn } from "#/server/auth";
 
 // OAuth redirects away — sync happens via usePostLoginSync in AppShell
 export function OAuthButtons({ onSignedIn: _ }: { onSignedIn?: () => Promise<void> }) {
@@ -9,10 +9,10 @@ export function OAuthButtons({ onSignedIn: _ }: { onSignedIn?: () => Promise<voi
 
   async function handleOAuth(provider: "google" | "github") {
     setLoading(provider);
-    await authClient.signIn.social({
-      provider,
-      callbackURL: "/editor",
+    const result = await oauthFn({
+      data: { provider, redirectTo: `${window.location.origin}/auth/callback` },
     });
+    if (result?.url) window.location.href = result.url;
     setLoading(null);
   }
 

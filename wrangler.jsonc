@@ -29,12 +29,4 @@
       }
     }
   },
-  "d1_databases": [
-    {
-      "binding": "SVGLogo",
-      "database_name": "svglogo",
-      "database_id": "3ac7b579-d0d1-42da-8e25-43165a472d80",
-      "migrations_dir": "drizzle/migrations"
-    }
-  ]
 }

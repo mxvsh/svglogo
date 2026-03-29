@@ -50,23 +50,28 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   async function handleFinish() {
     setLoading(true);
-    const result = await completeOnboardingFn({
-      data: {
-        name: name.trim() || "Friend",
-        role,
-        collectionsToSync: syncCollections ? collections : [],
-      },
-    });
+    try {
+      const result = await completeOnboardingFn({
+        data: {
+          name: name.trim() || "Friend",
+          role,
+          collectionsToSync: syncCollections ? collections : [],
+        },
+      });
 
-    if (result?.error) {
+      if (result?.error) {
+        toast(result.message ?? "Something went wrong, please try again.");
+        return;
+      }
+
+      await refetch();
+      void confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+    } catch (e) {
+      console.error("Onboarding error:", e);
       toast("Something went wrong, please try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    await refetch();
-    void confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-    setLoading(false);
   }
 
   return (

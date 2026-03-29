@@ -9,14 +9,19 @@ import TanStackQueryProvider from '../integrations/tanstack-query/root-provider'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { FAQ_JSON_LD, JSON_LD, SEO, SITE_NAME, SITE_URL } from '../data/site'
+import { FAQ_JSON_LD, JSON_LD, SEO, SITE_NAME } from '../data/site'
 import { Toast } from '@heroui/react'
+import { getSessionFn } from '#/server/auth.session'
 
 interface MyRouterContext {
   queryClient: QueryClient
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+  beforeLoad: async ({ context }) => {
+    const session = await getSessionFn();
+    context.queryClient.setQueryData(["session"], session);
+  },
   head: () => ({
     meta: [
       { charSet: 'utf-8' },

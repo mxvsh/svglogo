@@ -1,8 +1,9 @@
 import { Avatar, Button, Form, Input, Label, Modal, TextField, toast } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { authClient } from "#/lib/auth-client";
+import { updateProfileFn } from "#/server/user.update-profile";
 import { useSession } from "#/queries/auth/use-session";
+import { getInitials } from "#/lib/initials";
 
 interface ProfileModalProps {
   isOpen: boolean;
@@ -13,9 +14,7 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   const { data: session, refetch } = useSession();
   const user = session?.user;
 
-  const initials = user?.name
-    ? user.name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)
-    : user?.email?.[0]?.toUpperCase() ?? "?";
+  const initials = getInitials(user?.name, user?.email ?? "?");
 
   const [name, setName] = useState(user?.name ?? "");
   const [loading, setLoading] = useState(false);
@@ -23,8 +22,8 @@ export function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const { error } = await authClient.updateUser({ name: name.trim() });
-    if (error) {
+    const result = await updateProfileFn({ data: { name: name.trim() } });
+    if (result?.error) {
       toast("Failed to update profile");
     } else {
       await refetch();

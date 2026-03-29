@@ -1,77 +1,64 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-
-export const user = sqliteTable("user", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: integer("emailVerified", { mode: "boolean" }).notNull().default(false),
-  image: text("image"),
-  onboardingCompleted: integer("onboardingCompleted", { mode: "boolean" }).notNull().default(false),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull(),
-});
-
-export const session = sqliteTable("session", {
-  id: text("id").primaryKey(),
-  expiresAt: integer("expiresAt", { mode: "timestamp" }).notNull(),
-  token: text("token").notNull().unique(),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull(),
-  ipAddress: text("ipAddress"),
-  userAgent: text("userAgent"),
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
-
-export const account = sqliteTable("account", {
-  id: text("id").primaryKey(),
-  accountId: text("accountId").notNull(),
-  providerId: text("providerId").notNull(),
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  accessToken: text("accessToken"),
-  refreshToken: text("refreshToken"),
-  idToken: text("idToken"),
-  accessTokenExpiresAt: integer("accessTokenExpiresAt", { mode: "timestamp" }),
-  refreshTokenExpiresAt: integer("refreshTokenExpiresAt", { mode: "timestamp" }),
-  scope: text("scope"),
-  password: text("password"),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull(),
-});
+import { pgTable, pgPolicy, text, timestamp, boolean, uuid, index } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const USER_ROLES = ["designer", "developer", "founder", "marketer", "student", "other"] as const;
 export type UserRole = typeof USER_ROLES[number];
 
-export const profile = sqliteTable("profile", {
-  id: text("id").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .unique()
-    .references(() => user.id, { onDelete: "cascade" }),
-  role: text("role").$type<UserRole>(),
-  avatarUrl: text("avatarUrl"),
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull(),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }).notNull(),
-});
+// profiles.id == auth.users.id (Supabase manages the auth.users table)
+export const profiles = pgTable(
+  "profiles",
+  {
+    id: uuid("id").primaryKey(),
+    fullName: text("full_name"),
+    role: text("role").$type<UserRole>(),
+    avatarUrl: text("avatar_url"),
+    onboardingCompleted: boolean("onboarding_completed").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    pgPolicy("profiles_select_own", {
+      for: "select",
+      to: "authenticated",
+      using: sql`auth.uid() = ${t.id}`,
+    }),
+    pgPolicy("profiles_insert_own", {
+      for: "insert",
+      to: "authenticated",
+      withCheck: sql`auth.uid() = ${t.id}`,
+    }),
+    pgPolicy("profiles_update_own", {
+      for: "update",
+      to: "authenticated",
+      using: sql`auth.uid() = ${t.id}`,
+    }),
+  ],
+);
 
-export const collection = sqliteTable("collection", {
-  id: text("id").primaryKey(),
-  userId: text("userId")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  logoState: text("logoState").notNull(), // JSON string
-  folderId: text("folderId"), // null for now
-  createdAt: integer("createdAt", { mode: "timestamp" }).notNull(),
-});
-
-export const verification = sqliteTable("verification", {
-  id: text("id").primaryKey(),
-  identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: integer("expiresAt", { mode: "timestamp" }).notNull(),
-  createdAt: integer("createdAt", { mode: "timestamp" }),
-  updatedAt: integer("updatedAt", { mode: "timestamp" }),
-});
+export const collections = pgTable(
+  "collections",
+  {
+    id: text("id").primaryKey(),
+    userId: uuid("user_id").notNull(),
+    logoState: text("logo_state").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    index("collections_user_id_idx").on(t.userId, t.createdAt),
+    pgPolicy("collections_select_own", {
+      for: "select",
+      to: "authenticated",
+      using: sql`auth.uid() = ${t.userId}`,
+    }),
+    pgPolicy("collections_insert_own", {
+      for: "insert",
+      to: "authenticated",
+      withCheck: sql`auth.uid() = ${t.userId}`,
+    }),
+    pgPolicy("collections_delete_own", {
+      for: "delete",
+      to: "authenticated",
+      using: sql`auth.uid() = ${t.userId}`,
+    }),
+  ],
+);

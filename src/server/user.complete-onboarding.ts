@@ -1,10 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getRequest } from "@tanstack/react-start/server";
-import { env } from "cloudflare:workers";
-import { drizzle } from "drizzle-orm/d1";
-import { nanoid } from "nanoid";
-import { auth } from "#/lib/auth";
-import { collection, profile } from "../../drizzle/schema";
+import { getSupabaseServerClient, getSupabaseAdminClient } from "#/lib/supabase";
+import { getDb } from "#/lib/db";
+import { profiles, collections } from "../../drizzle/schema";
 import type { UserRole } from "../../drizzle/schema";
 import type { LogoState } from "#/domain/logo/logo.types";
 
@@ -13,45 +10,51 @@ export const completeOnboardingFn = createServerFn({ method: "POST" })
     (d: { name: string; role: UserRole | null; collectionsToSync: LogoState[] }) => d,
   )
   .handler(async ({ data }) => {
-    const request = getRequest();
-    const db = drizzle(env.SVGLogo!);
+    try {
+      const supabase = getSupabaseServerClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return { error: true, message: "Not authenticated" };
 
-    const session = await auth.api.getSession({ headers: request.headers });
-    if (!session?.user) return { error: true, message: "Not authenticated" };
+      const admin = getSupabaseAdminClient();
+      const db = getDb();
+      const userId = user.id;
 
-    const userId = session.user.id;
-
-    await auth.api.updateUser({
-      body: { name: data.name, onboardingCompleted: true },
-      headers: request.headers,
-    });
-
-    await db
-      .insert(profile)
-      .values({
-        id: nanoid(10),
-        userId,
-        role: data.role ?? undefined,
-        avatarUrl: session.user.image ?? null,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      .onConflictDoUpdate({
-        target: profile.userId,
-        set: { role: data.role ?? undefined, avatarUrl: session.user.image ?? null, updatedAt: new Date() },
+      await admin.auth.admin.updateUserById(userId, {
+        user_metadata: { full_name: data.name },
       });
 
-    if (data.collectionsToSync.length > 0) {
-      await db.insert(collection).values(
-        data.collectionsToSync.map((logo) => ({
-          id: nanoid(10),
-          userId,
-          logoState: JSON.stringify(logo),
-          folderId: null,
-          createdAt: new Date(),
-        })),
-      );
-    }
+      await db
+        .insert(profiles)
+        .values({
+          id: userId,
+          fullName: data.name,
+          role: data.role ?? undefined,
+          avatarUrl: (user.user_metadata.avatar_url as string | undefined) ?? null,
+          onboardingCompleted: true,
+        })
+        .onConflictDoUpdate({
+          target: profiles.id,
+          set: {
+            fullName: data.name,
+            role: data.role ?? undefined,
+            onboardingCompleted: true,
+            updatedAt: new Date(),
+          },
+        });
 
-    return { error: false };
+      if (data.collectionsToSync.length > 0) {
+        await db.insert(collections).values(
+          data.collectionsToSync.map((logo, i) => ({
+            id: `${userId}-${Date.now()}-${i}`,
+            userId,
+            logoState: JSON.stringify(logo),
+          })),
+        ).onConflictDoNothing();
+      }
+
+      return { error: false };
+    } catch (e) {
+      console.error("[complete-onboarding]", e);
+      return { error: true, message: e instanceof Error ? e.message : "Unknown error" };
+    }
   });

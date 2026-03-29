@@ -1,6 +1,6 @@
 import { Button, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { useState } from "react";
-import { authClient } from "#/lib/auth-client";
+import { signupFn } from "#/server/auth";
 
 export function SignUpTab({ onSuccess }: { onSuccess?: () => void }) {
   const [error, setError] = useState("");
@@ -13,14 +13,12 @@ export function SignUpTab({ onSuccess }: { onSuccess?: () => void }) {
     setLoading(true);
 
     const data = Object.fromEntries(new FormData(e.currentTarget));
-    const { error: err } = await authClient.signUp.email({
-      email: data.email as string,
-      password: data.password as string,
-      name: "",
+    const result = await signupFn({
+      data: { email: data.email as string, password: data.password as string },
     });
 
-    if (err) {
-      setError(err.message ?? "Sign up failed");
+    if (result?.error) {
+      setError(result.message ?? "Sign up failed");
       setLoading(false);
       return;
     }

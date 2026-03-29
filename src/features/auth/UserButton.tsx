@@ -1,12 +1,16 @@
 import { Avatar, Button, Dropdown } from "@heroui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { useState } from "react";
-import { authClient } from "#/lib/auth-client";
+import { signoutFn } from "#/server/auth";
 import { useSession } from "#/queries/auth/use-session";
+import { getInitials } from "#/lib/initials";
 import { AuthModal } from "./AuthModal";
 import { ProfileModal } from "./ProfileModal";
 import { CollectionsModal } from "./CollectionsModal";
 
 export function UserButton() {
+  const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [collectionsOpen, setCollectionsOpen] = useState(false);
@@ -17,19 +21,33 @@ export function UserButton() {
   if (!session) {
     return (
       <>
-        <Button onPress={() => setModalOpen(true)}>Sign In</Button>
+        <motion.div
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+        >
+          <Button onPress={() => setModalOpen(true)}>Sign In</Button>
+        </motion.div>
         <AuthModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
       </>
     );
   }
 
   const user = session.user;
-  const initials = user.name
-    ? user.name.split(" ").map((w: string) => w[0]).join("").toUpperCase().slice(0, 2)
-    : user.email[0].toUpperCase();
+  const initials = getInitials(user.name, user.email);
+
+  async function handleSignOut() {
+    await signoutFn();
+    await queryClient.invalidateQueries({ queryKey: ["session"] });
+  }
 
   return (
     <>
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      >
       <Dropdown>
         <Dropdown.Trigger className="rounded-full">
           <Avatar>
@@ -54,7 +72,7 @@ export function UserButton() {
             onAction={(key) => {
               if (key === "profile") setProfileOpen(true);
               else if (key === "collections") setCollectionsOpen(true);
-              else if (key === "signout") void authClient.signOut();
+              else if (key === "signout") void handleSignOut();
             }}
           >
             <Dropdown.Item id="profile">My Profile</Dropdown.Item>
@@ -63,6 +81,7 @@ export function UserButton() {
           </Dropdown.Menu>
         </Dropdown.Popover>
       </Dropdown>
+      </motion.div>
 
       <ProfileModal isOpen={profileOpen} onClose={() => setProfileOpen(false)} />
       <CollectionsModal isOpen={collectionsOpen} onClose={() => setCollectionsOpen(false)} />
