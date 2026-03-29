@@ -9,12 +9,10 @@ export function LogoCanvas() {
 
   return (
     <div
-      className="relative shrink-0 shadow-2xl shadow-black/50"
+      className="relative aspect-square w-[min(78vw,58dvh)] max-w-[512px] shrink-0 [&>svg]:h-full [&>svg]:w-full"
       data-tour="canvas"
       style={{
-        width: 512,
-        height: 512,
-        borderRadius: present.borderRadius,
+        borderRadius: `${(present.borderRadius / 512) * 100}%`,
         overflow: "hidden",
         ...bgStyle,
         ...(present.borderWidth > 0

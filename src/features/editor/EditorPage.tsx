@@ -105,7 +105,7 @@ export function EditorPage() {
   );
 
   return (
-    <div className="relative flex h-dvh w-screen items-center justify-center overflow-hidden pb-16 md:pb-0">
+    <div className="relative flex h-dvh w-screen items-center justify-center overflow-hidden">
       {import.meta.env.PROD && (
         <iframe
         src="https://cloud.livedot.dev/embed/live?website=29013677-b291-48ad-b122-26833ff63ede&token=16cc12bcecb242958d2bb278&scale=0.85&branding=1"
@@ -125,7 +125,6 @@ export function EditorPage() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="[zoom:0.55] md:[zoom:1]"
           >
             <LogoCanvas />
           </motion.div>
