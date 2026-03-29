@@ -4,6 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { drizzle } from "drizzle-orm/d1";
 import { env } from "cloudflare:workers";
 import * as schema from "../../drizzle/schema";
+import { sendVerificationEmail } from "#/infra/email";
 
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
@@ -11,7 +12,16 @@ export const auth = betterAuth({
     provider: "sqlite",
     schema,
   }),
-  emailAndPassword: { enabled: true },
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendVerificationEmail(user.email, url);
+    },
+  },
   user: {
     additionalFields: {
       onboardingCompleted: {
