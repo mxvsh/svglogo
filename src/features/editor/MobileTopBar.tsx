@@ -5,6 +5,7 @@ import { exportPng } from "#/commands/export/export-png";
 import { exportIco } from "#/commands/export/export-ico";
 import { trackEvent } from "#/lib/analytics";
 import { CrownDiamond } from "@gravity-ui/icons";
+import { UserButton } from "#/features/auth/UserButton";
 import { InfoModal } from "./InfoModal";
 
 export function MobileTopBar() {
@@ -29,9 +30,7 @@ export function MobileTopBar() {
         />
       </button>
       <div className="flex items-center gap-2">
-        <a href="/creator" target="_blank" rel="noopener noreferrer">
-
-        </a>
+        <UserButton />
         <Dropdown>
           <Button size="sm" variant="primary" aria-label="Export">
             Export

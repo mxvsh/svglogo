@@ -1,24 +1,17 @@
 import { Button, Separator } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { oauthFn } from "#/server/auth";
+import { authClient } from "#/lib/auth-client";
 
 export function OAuthButtons() {
   const [loading, setLoading] = useState<string | null>(null);
 
   async function handleOAuth(provider: "google" | "github") {
     setLoading(provider);
-    const result = await oauthFn({
-      data: {
-        provider,
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
+    await authClient.signIn.social({
+      provider,
+      callbackURL: "/editor",
     });
-
-    if (result?.url) {
-      window.location.href = result.url;
-      return;
-    }
     setLoading(null);
   }
 

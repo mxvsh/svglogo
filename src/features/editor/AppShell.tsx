@@ -6,6 +6,9 @@ import { useInfiniteStore } from "#/store/infinite-store";
 import { CollectionsButton } from "#/features/collections/CollectionsButton";
 import { PreviewButton } from "#/features/preview/PreviewButton";
 import { ShareButton } from "#/features/share/ShareButton";
+import { UserButton } from "#/features/auth/UserButton";
+import { OnboardingModal } from "#/features/auth/OnboardingModal";
+import { useSession } from "#/queries/auth/use-session";
 import { EditorPage } from "./EditorPage";
 import { FABs } from "./FABs";
 import { MobileTopBar } from "./MobileTopBar";
@@ -58,6 +61,8 @@ export function AppShell({
   };
 
   const infiniteMode = useInfiniteStore((s) => s.enabled);
+  const { data: session } = useSession();
+  const showOnboarding = !!session && !session.user.onboardingCompleted;
 
   return (
     <div className="block">
@@ -73,6 +78,9 @@ export function AppShell({
             <MobileTopBar />
 
             <div className="hidden md:block">
+              <div className="fixed top-4 right-4 z-50">
+                <UserButton />
+              </div>
               <FABs />
               <motion.div
                 variants={containerVariants}
@@ -95,6 +103,7 @@ export function AppShell({
         )}
       </AnimatePresence>
       <OnboardingTour />
+      <OnboardingModal isOpen={showOnboarding} onClose={() => {}} />
       <EditorPage />
     </div>
   );

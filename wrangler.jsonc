@@ -1,36 +1,40 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "svglogo-dev",
-	"compatibility_date": "2026-03-12",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"main": "@tanstack/react-start/server-entry",
-	"observability": {
-		"enabled": true,
-	},
-	"vars": {
-		"VITE_TURNSTILE_SITE_KEY": "0x4AAAAAACsp6BY1heuKsB5N"
-	},
-	// Secrets (set via `wrangler secret put`):
-	// - TURNSTILE_SECRET
-	// - TELEGRAM_BOT_TOKEN
-	// - TELEGRAM_CHAT_ID
-	"kv_namespaces": [
-		{
-			"binding": "SHARE_KV",
-			"id": "656eab18a90043e1b5de203c85502d99"
-		},
-		{
-			"binding": "CREATOR_EARLY_SIGNUP",
-			"id": "e56c14da37064503bfbc6b18ae636ad0"
-		},
-	],
-	"env": {
-		"production": {
-			"vars": {
-				"VITE_TURNSTILE_SITE_KEY": "0x4AAAAAACsp6BY1heuKsB5N"
-			}
-		}
-	}
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "svglogo-dev",
+  "compatibility_date": "2026-03-12",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "main": "@tanstack/react-start/server-entry",
+  "observability": {
+    "enabled": true,
+  },
+  "vars": {
+    "VITE_TURNSTILE_SITE_KEY": "0x4AAAAAACsp6BY1heuKsB5N"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "SHARE_KV",
+      "id": "656eab18a90043e1b5de203c85502d99"
+    },
+    {
+      "binding": "CREATOR_EARLY_SIGNUP",
+      "id": "e56c14da37064503bfbc6b18ae636ad0"
+    },
+  ],
+  "env": {
+    "production": {
+      "vars": {
+        "VITE_TURNSTILE_SITE_KEY": "0x4AAAAAACsp6BY1heuKsB5N"
+      }
+    }
+  },
+  "d1_databases": [
+    {
+      "binding": "SVGLogo",
+      "database_name": "svglogo",
+      "database_id": "3ac7b579-d0d1-42da-8e25-43165a472d80",
+      "migrations_dir": "drizzle/migrations"
+    }
+  ]
 }

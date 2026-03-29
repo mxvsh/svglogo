@@ -15,6 +15,7 @@ import { Route as EditorRouteImport } from './routes/editor'
 import { Route as CreatorRouteImport } from './routes/creator'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -46,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/editor': typeof EditorRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/editor': typeof EditorRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,13 +79,36 @@ export interface FileRoutesById {
   '/editor': typeof EditorRoute
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$' | '/creator' | '/editor' | '/privacy' | '/terms'
+  fullPaths:
+    | '/'
+    | '/$'
+    | '/creator'
+    | '/editor'
+    | '/privacy'
+    | '/terms'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$' | '/creator' | '/editor' | '/privacy' | '/terms'
-  id: '__root__' | '/' | '/$' | '/creator' | '/editor' | '/privacy' | '/terms'
+  to:
+    | '/'
+    | '/$'
+    | '/creator'
+    | '/editor'
+    | '/privacy'
+    | '/terms'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/creator'
+    | '/editor'
+    | '/privacy'
+    | '/terms'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -87,6 +118,7 @@ export interface RootRouteChildren {
   EditorRoute: typeof EditorRoute
   PrivacyRoute: typeof PrivacyRoute
   TermsRoute: typeof TermsRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -133,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -143,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   EditorRoute: EditorRoute,
   PrivacyRoute: PrivacyRoute,
   TermsRoute: TermsRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
