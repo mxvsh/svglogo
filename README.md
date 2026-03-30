@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://botmate.dev">
+  <a href="https://svglogo.dev">
     <img src="https://github.com/user-attachments/assets/f01669c1-2dd7-4fb6-818a-28db8f11a1fd" width="80px" alt="BotMate logo" />
   </a>
 </p>
