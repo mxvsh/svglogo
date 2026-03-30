@@ -4,6 +4,7 @@ import type { LogoState } from "#/domain/logo/logo.types";
 import { loadLogoFromState } from "#/commands/logo/load-logo";
 import { useInfiniteStore } from "#/store/infinite-store";
 import { CollectionsButton } from "#/features/collections/CollectionsButton";
+import { Tooltip } from "@heroui/react";
 import { PreviewButton } from "#/features/preview/PreviewButton";
 import { ShareButton } from "#/features/share/ShareButton";
 import { UserButton } from "#/features/auth/UserButton";
@@ -91,6 +92,18 @@ export function AppShell({
                 animate="visible"
                 className="absolute bottom-4 right-4 z-50 flex flex-col gap-2 items-end"
               >
+                <motion.div variants={itemVariants}>
+                  <Tooltip delay={0} placement="left">
+                    <Tooltip.Trigger>
+                      <a href="https://wave.mxv.sh?utm_source=svglogo" target="_blank" rel="noreferrer" data-umami-event="click wave link">
+                        <img src="/wave.png" alt="Wave" width={40} height={40} className="rounded-xl" />
+                      </a>
+                    </Tooltip.Trigger>
+                    <Tooltip.Content>
+                      <p>Native macOS speech to text</p>
+                    </Tooltip.Content>
+                  </Tooltip>
+                </motion.div>
                 <motion.div variants={itemVariants}>
                   <ShareButton />
                 </motion.div>
