@@ -1,0 +1,3 @@
+[submodule "search"]
+	path = search
+	url = git@github.com:mxvsh/svglogo-api.git
