@@ -1,9 +1,11 @@
 import { Avatar, Button, Dropdown } from "@heroui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signoutFn } from "#/server/auth";
 import { useSession } from "#/queries/auth/use-session";
+import { useAuthModalOpen } from "#/queries/ui/use-auth-modal";
+import { closeAuthModal } from "#/commands/ui/open-auth-modal";
 import { getInitials } from "#/lib/initials";
 import { AuthModal } from "./AuthModal";
 import { ProfileModal } from "./ProfileModal";
@@ -15,6 +17,11 @@ export function UserButton() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [collectionsOpen, setCollectionsOpen] = useState(false);
   const { data: session, isPending } = useSession();
+  const authModalOpen = useAuthModalOpen();
+
+  useEffect(() => {
+    if (authModalOpen) setModalOpen(true);
+  }, [authModalOpen]);
 
   if (isPending) return null;
 
@@ -28,7 +35,7 @@ export function UserButton() {
         >
           <Button onPress={() => setModalOpen(true)}>Sign In</Button>
         </motion.div>
-        <AuthModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
+        <AuthModal isOpen={modalOpen} onClose={() => { setModalOpen(false); closeAuthModal(); }} />
       </>
     );
   }

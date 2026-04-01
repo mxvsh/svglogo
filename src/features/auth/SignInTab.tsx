@@ -1,6 +1,7 @@
 import { Button, FieldError, Form, Input, Label, TextField } from "@heroui/react";
 import { useState } from "react";
 import { loginFn } from "#/server/auth";
+import { getTurnstileToken } from "#/lib/turnstile";
 
 export function SignInTab({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
   const [error, setError] = useState("");
@@ -8,6 +9,7 @@ export function SignInTab({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!getTurnstileToken()) return;
     setError("");
     setLoading(true);
 
@@ -39,7 +41,14 @@ export function SignInTab({ onSignedIn }: { onSignedIn: () => Promise<void> }) {
         <FieldError />
       </TextField>
       {error && <p className="text-xs text-danger">{error}</p>}
-      <Button type="submit" variant="primary" isPending={loading} className="w-full" data-umami-event="auth sign in">
+      <Button
+        type="submit"
+        variant="primary"
+        isPending={loading}
+        isDisabled={!getTurnstileToken()}
+        className="w-full"
+        data-umami-event="auth sign in"
+      >
         Sign In
       </Button>
     </Form>

@@ -62,12 +62,14 @@ function bumpStats(patch: Partial<RandomizeStats>) {
 
 export async function randomizeLogo(
   options:
-    | { smart: true; palette?: string[]; iconPrefix?: string }
-    | { smart?: false; icon: boolean; iconColor: boolean; background: boolean; font?: boolean; palette?: string[]; iconPrefix?: string },
+    | { smart: true; palette?: string[]; iconPrefix?: string; preloadedIcons?: string[] }
+    | { smart?: false; icon: boolean; iconColor: boolean; background: boolean; font?: boolean; palette?: string[]; iconPrefix?: string; preloadedIcons?: string[] },
 ) {
   const { present } = useLogoStore.getState();
   const prefix = options.iconPrefix || randomPrefix();
-  const icons = await fetchAllIconsForPrefix(prefix);
+  const icons = options.preloadedIcons?.length
+    ? options.preloadedIcons
+    : await fetchAllIconsForPrefix(prefix);
 
   if (options.smart) {
     bumpStats({ total: 1, smart: 1, textMode: present.textMode ? 1 : 0 });

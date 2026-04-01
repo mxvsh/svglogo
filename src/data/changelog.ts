@@ -5,6 +5,13 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    date: "Mar 31, 2026",
+    changes: [
+      "AI Search in icon picker",
+      "AI category mode in Randomize",
+    ],
+  },
+  {
     date: "Mar 29, 2026",
     changes: [
       "Sign up & sign in with email or OAuth",

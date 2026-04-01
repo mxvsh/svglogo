@@ -1,5 +1,7 @@
 import { type Variants, AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
+import { setTurnstileToken, clearTurnstileToken } from "#/lib/turnstile";
 import type { LogoState } from "#/domain/logo/logo.types";
 import { loadLogoFromState } from "#/commands/logo/load-logo";
 import { useInfiniteStore } from "#/store/infinite-store";
@@ -23,6 +25,9 @@ export function AppShell({
   sharedLogo?: LogoState | null;
 }) {
   const initialized = useRef(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (sharedLogo && !initialized.current) {
@@ -129,6 +134,14 @@ export function AppShell({
         onClose={clearSyncData}
       />
       <EditorPage />
+      {mounted && (
+        <Turnstile
+          siteKey="0x4AAAAAACsp6BY1heuKsB5N"
+          options={{ size: "invisible" }}
+          onSuccess={setTurnstileToken}
+          onExpire={clearTurnstileToken}
+        />
+      )}
     </div>
   );
 }

@@ -17,6 +17,8 @@ export interface AuthUser {
 interface AuthState {
   user: AuthUser | null;
   setUser: (user: AuthUser | null) => void;
+  authModalOpen: boolean;
+  setAuthModalOpen: (open: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -25,6 +27,11 @@ export const useAuthStore = create<AuthState>()(
     setUser: (user) =>
       set((d) => {
         d.user = user;
+      }),
+    authModalOpen: false,
+    setAuthModalOpen: (open) =>
+      set((d) => {
+        d.authModalOpen = open;
       }),
   }))
 );

@@ -5,9 +5,13 @@ import { motion } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import palettes from "nice-color-palettes/200.json";
 import { randomizeLogo } from "#/commands/logo/randomize-logo";
+import { getCategoryIconsFn } from "#/server/icons.category";
+import { openAuthModal } from "#/commands/ui/open-auth-modal";
 import { trackEvent } from "#/lib/analytics";
 import { useLogoStore } from "#/store/logo-store";
-import { ICON_SETS } from "#/domain/icon/icon.types";
+import { useSession } from "#/queries/auth/use-session";
+import { useAuthModalOpen } from "#/queries/ui/use-auth-modal";
+import { ICON_CATEGORIES, ICON_SETS, type IconCategoryId } from "#/domain/icon/icon.types";
 
 function arraysEqual(a: string[], b: string[]) {
   return a.length === b.length && a.every((v, i) => v === b[i]);
@@ -15,6 +19,8 @@ function arraysEqual(a: string[], b: string[]) {
 
 export function RandomizePopover() {
   const textMode = useLogoStore((s) => s.present.textMode);
+  const { data: session } = useSession();
+  const authModalOpen = useAuthModalOpen();
   const [diceRotation, setDiceRotation] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -27,6 +33,21 @@ export function RandomizePopover() {
   const [randomizeFontColor, setRandomizeFontColor] = useState(true);
   const [selectedIconSet, setSelectedIconSet] = useState<string | null>(null);
   const [iconPackOpen, setIconPackOpen] = useState(false);
+  const [aiMode, setAiMode] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<IconCategoryId>(ICON_CATEGORIES[0].id);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+
+  useEffect(() => {
+    if (authModalOpen) setIsOpen(false);
+  }, [authModalOpen]);
+
+  useEffect(() => {
+    if (!session && aiMode) {
+      setAiMode(false);
+      aiIconPool.current = [];
+      aiPoolCategory.current = null;
+    }
+  }, [session, aiMode]);
 
   const usePalette = !!selectedPalette;
   const nothingSelected = custom && !randomizeBackground && (textMode ? (!randomizeFont && !randomizeFontColor) : (!randomizeIcon && !randomizeIconColor));
@@ -49,6 +70,8 @@ export function RandomizePopover() {
   };
 
   const lastRun = useRef(0);
+  const aiIconPool = useRef<string[]>([]);
+  const aiPoolCategory = useRef<string | null>(null);
 
   const runRandomize = () => {
     const now = Date.now();
@@ -57,6 +80,35 @@ export function RandomizePopover() {
     setDiceRotation((r) => r + 360);
     const palette = selectedPalette ?? undefined;
     const iconPrefix = selectedIconSet ?? undefined;
+
+    if (aiMode) {
+      const category = selectedCategory;
+
+      const runWithPool = (pool: string[]) => {
+        const icon = pool.shift()!;
+        aiIconPool.current = pool;
+        void randomizeLogo({ smart: true, palette, preloadedIcons: [icon] });
+      };
+
+      // Refetch if category changed or pool is empty
+      if (aiPoolCategory.current !== category || aiIconPool.current.length === 0) {
+        void getCategoryIconsFn({ data: { category } }).then(({ icons }) => {
+          if (!icons.length) {
+            void randomizeLogo({ smart: true, palette });
+            return;
+          }
+          aiPoolCategory.current = category;
+          aiIconPool.current = [...icons];
+          runWithPool(aiIconPool.current);
+        });
+      } else {
+        runWithPool(aiIconPool.current);
+      }
+
+      trackEvent("randomize logo", { mode: "ai", text_mode: textMode, category });
+      return;
+    }
+
     if (!custom) {
       void randomizeLogo({ smart: true, palette, iconPrefix });
       trackEvent("randomize logo", { mode: "smart", text_mode: textMode, use_palette: usePalette });
@@ -149,6 +201,61 @@ export function RandomizePopover() {
             <div className="flex w-56 flex-col gap-4">
               <div className="flex items-center justify-between">
                 <div>
+                  <Label className="text-sm">AI Search</Label>
+                  <p className="text-xs text-muted">Search by theme</p>
+                </div>
+                <Switch
+                  isSelected={aiMode}
+                  onChange={(v) => {
+                    if (v && !session) { openAuthModal(); return; }
+                    setAiMode(v);
+                    if (!v) { setSelectedCategory(ICON_CATEGORIES[0].id); aiIconPool.current = []; aiPoolCategory.current = null; }
+                  }}
+                >
+                  <Switch.Control><Switch.Thumb /></Switch.Control>
+                </Switch>
+              </div>
+
+              {aiMode && (
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label className="text-sm">Category</Label>
+                  </div>
+                  <Popover isOpen={categoryOpen} onOpenChange={setCategoryOpen}>
+                    <Popover.Trigger>
+                      <button
+                        type="button"
+                        className="flex items-center gap-1.5 rounded-md border border-border px-2 py-1 text-xs text-muted hover:text-foreground transition-colors max-w-28 truncate"
+                      >
+                        {ICON_CATEGORIES.find((c) => c.id === selectedCategory)?.label}
+                        <Icon icon="lucide:chevron-down" width={12} />
+                      </button>
+                    </Popover.Trigger>
+                    <Popover.Content placement="right">
+                      <Popover.Dialog>
+                        <div className="flex flex-col gap-1 w-44 max-h-52 overflow-y-auto">
+                          {ICON_CATEGORIES.map((c) => (
+                            <button
+                              key={c.id}
+                              type="button"
+                              onClick={() => { setSelectedCategory(c.id); aiIconPool.current = []; aiPoolCategory.current = null; setCategoryOpen(false); }}
+                              className={`flex items-center justify-between rounded-md px-2 py-1.5 text-xs transition-colors ${selectedCategory === c.id ? "bg-accent/10 text-accent" : "text-muted hover:text-foreground"}`}
+                            >
+                              {c.label}
+                              {selectedCategory === c.id && <Check className="size-3" />}
+                            </button>
+                          ))}
+                        </div>
+                      </Popover.Dialog>
+                    </Popover.Content>
+                  </Popover>
+                </div>
+              )}
+
+              <div className="h-px bg-border" />
+
+              <div className="flex items-center justify-between">
+                <div>
                   <Label className="text-sm">Palette</Label>
                   <p className="text-xs text-muted">Constrain colors</p>
                 </div>
@@ -215,6 +322,7 @@ export function RandomizePopover() {
                 </Popover>
               </div>
 
+              {!aiMode && (
               <div className="flex items-center justify-between">
                 <div>
                   <Label className="text-sm">Icon Pack</Label>
@@ -264,6 +372,7 @@ export function RandomizePopover() {
                   </Popover.Content>
                 </Popover>
               </div>
+              )}
 
               <div className="flex items-center justify-between">
                 <div>
