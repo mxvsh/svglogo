@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
+    "generate:embeddings": "cd api && bun run generate:embeddings",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler deploy",
     "cf-typegen": "wrangler types",
@@ -25,6 +26,8 @@
     "@heroui/react": "^3.0.1",
     "@heroui/styles": "^3.0.1",
     "@iconify/react": "^6.0.2",
+    "@marsidev/react-turnstile": "^1.5.0",
+    "@openrouter/sdk": "^0.10.2",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.99.3",
     "@tailwindcss/vite": "^4.1.18",

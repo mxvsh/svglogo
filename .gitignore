@@ -37,3 +37,7 @@ supabase/.temp
 
 # cf
 worker-configuration.d.ts
+
+# Icon embeddings — generated, stored in R2
+public/icon-embeddings.bin
+src/data/icon-embeddings-meta.json
