@@ -73,6 +73,21 @@ export function FABs() {
       <motion.div variants={itemVariants}>
         <Tooltip delay={0}>
           <Tooltip.Trigger>
+            <a href="mailto:feedback@svglogo.dev" data-umami-event="click feedback link">
+              <Button variant="ghost" isIconOnly aria-label="Send feedback">
+                <Icon icon="lucide:mail" width={15} height={15} />
+              </Button>
+            </a>
+          </Tooltip.Trigger>
+          <Tooltip.Content placement="left">
+            <p>Send feedback</p>
+          </Tooltip.Content>
+        </Tooltip>
+      </motion.div>
+
+      <motion.div variants={itemVariants}>
+        <Tooltip delay={0}>
+          <Tooltip.Trigger>
             <a href={GITHUB_URL} target="_blank" rel="noreferrer" data-umami-event="click github link">
               <Button variant="ghost" isIconOnly aria-label="GitHub">
                 <Icon icon="simple-icons:github" width={14} height={14} />
