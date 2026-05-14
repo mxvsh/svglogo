@@ -106,14 +106,7 @@ export function EditorPage() {
 
   return (
     <div className="relative flex h-dvh w-screen items-center justify-center overflow-hidden">
-      {import.meta.env.PROD && (
-        <iframe
-        src="https://cloud.livedot.dev/embed/live?website=29013677-b291-48ad-b122-26833ff63ede&token=16cc12bcecb242958d2bb278&scale=0.85&branding=1"
-          className="fixed top-4 left-4 z-100 hidden md:block"
-        ></iframe>
-      )}
-
-      <GridBackground />
+<GridBackground />
       <AnnouncementBanner />
       <AnimatePresence mode="wait">
         {infiniteMode ? (
