@@ -60,8 +60,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
-        {import.meta.env.PROD && (<script defer src="https://cloud.livedot.dev/t.js" data-website="29013677-b291-48ad-b122-26833ff63ede"></script>)}
-        {import.meta.env.PROD && (<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4590676166100458" crossOrigin="anonymous"></script>)}
+{import.meta.env.PROD && (<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4590676166100458" crossOrigin="anonymous"></script>)}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
