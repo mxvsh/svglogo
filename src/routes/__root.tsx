@@ -87,7 +87,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         {import.meta.env.PROD && (
           <script
             defer
-            src="https://analytics.monawwar.io/script.js"
+            src="https://analytics.mxv.sh/script.js"
             data-website-id="f883cc7f-5dc4-4045-b1ad-c279fcce963c"
           />
         )}
