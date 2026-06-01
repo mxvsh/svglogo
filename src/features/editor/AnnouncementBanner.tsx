@@ -1,9 +1,8 @@
-import { Button, Modal } from "@heroui/react";
 import { Icon } from "@iconify/react";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ANNOUNCEMENT } from "#/data/announcement";
 import { useVersionCheck } from "#/hooks/use-version-check";
+import { WebbinPromoModal } from "./WebbinPromoModal";
 
 export function AnnouncementBanner() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -42,57 +41,15 @@ export function AnnouncementBanner() {
           type="button"
           onClick={() => setModalOpen(true)}
           data-umami-event="announcement banner click"
-          data-umami-event-id={ANNOUNCEMENT.id}
+          data-umami-event-id="webbin-promo"
           className="cursor-pointer rounded-lg bg-primary/10 border border-primary/20 px-4 py-2 text-xs font-medium text-primary backdrop-blur-sm hover:bg-primary/15 transition-colors flex items-center gap-1.5"
         >
-          <Icon icon={ANNOUNCEMENT.icon} width={12} />
-          {ANNOUNCEMENT.label}
+          <Icon icon="lucide:sparkles" width={12} />
+          Introducing Webbin ✦
         </button>
       </motion.div>
 
-      <Modal isOpen={modalOpen} onOpenChange={(open) => !open && setModalOpen(false)}>
-        <Modal.Backdrop isDismissable>
-          <Modal.Container size="sm">
-            <Modal.Dialog>
-              <Modal.CloseTrigger />
-              <Modal.Body className="p-0 overflow-hidden">
-                <div className="flex items-center gap-3 border-b border-border px-4 py-3">
-                  <Modal.Icon className="bg-default text-foreground">
-                    <Icon icon={ANNOUNCEMENT.icon} width={16} />
-                  </Modal.Icon>
-                  <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted">What's new</p>
-                    <h3 className="text-sm font-semibold">{ANNOUNCEMENT.heading}</h3>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2 px-4 py-3">
-                  {ANNOUNCEMENT.body.map((line, i) => (
-                    <p key={i} className="text-sm text-muted leading-relaxed">{line}</p>
-                  ))}
-                </div>
-
-                {ANNOUNCEMENT.cta && (
-                  <div className="px-4 pb-4">
-                    <a
-                      href={ANNOUNCEMENT.cta.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      data-umami-event="announcement cta click"
-                      data-umami-event-id={ANNOUNCEMENT.id}
-                    >
-                      <Button variant="primary" size="sm" className="gap-2 w-full">
-                        {ANNOUNCEMENT.cta.icon && <Icon icon={ANNOUNCEMENT.cta.icon} width={13} />}
-                        {ANNOUNCEMENT.cta.label}
-                      </Button>
-                    </a>
-                  </div>
-                )}
-              </Modal.Body>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      <WebbinPromoModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 }

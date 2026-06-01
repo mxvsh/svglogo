@@ -18,6 +18,7 @@ import { EditorPage } from "./EditorPage";
 import { FABs } from "./FABs";
 import { MobileTopBar } from "./MobileTopBar";
 import { OnboardingTour } from "./OnboardingTour";
+import { WebbinPromoModal } from "./WebbinPromoModal";
 
 export function AppShell({
   sharedLogo,
@@ -100,12 +101,18 @@ export function AppShell({
                 <motion.div variants={itemVariants}>
                   <Tooltip delay={0} placement="left">
                     <Tooltip.Trigger>
-                      <a href="https://wave.mxv.sh?utm_source=svglogo" target="_blank" rel="noreferrer" data-umami-event="click wave link">
-                        <img src="/wave.png" alt="Wave" width={40} height={40} className="rounded-xl" />
+                      <a href="https://webbin.dev?utm_source=svglogo" target="_blank" rel="noreferrer" data-umami-event="click webbin link" className="relative block">
+                        <motion.span
+                          className="absolute inset-0 rounded-xl"
+                          style={{ boxShadow: '0 0 0 0 rgba(139,92,246,0.7)' }}
+                          animate={{ boxShadow: ['0 0 0 0px rgba(139,92,246,0.7)', '0 0 0 8px rgba(139,92,246,0)', '0 0 0 0px rgba(139,92,246,0)'] }}
+                          transition={{ duration: 1.5, repeat: 1, ease: 'easeOut' }}
+                        />
+                        <img src="/webbin.png" alt="Webbin" width={40} height={40} className="rounded-xl relative z-10" />
                       </a>
                     </Tooltip.Trigger>
                     <Tooltip.Content>
-                      <p>Native macOS speech to text</p>
+                      <p>Business profile to website</p>
                     </Tooltip.Content>
                   </Tooltip>
                 </motion.div>
@@ -125,6 +132,7 @@ export function AppShell({
       </AnimatePresence>
       <OnboardingTour />
       <OnboardingModal isOpen={showOnboarding} onClose={() => {}} />
+      <WebbinPromoModal />
       <CollectionSyncModal
         isOpen={!!syncData}
         cloudCount={syncData?.cloud.length ?? 0}
